@@ -1,0 +1,136 @@
+%%
+%% Copyright (C) 2021 by Jinwen XU
+%% -------------------------------
+%%
+%% This file may be distributed and/or modified under the conditions of
+%% the LaTeX Project Public License, either version 1.3c of this license
+%% or (at your option) any later version.  The latest version of this
+%% license is in:
+%%
+%%    http://www.latex-project.org/lppl.txt
+%%
+\NeedsTeXFormat{LaTeX2e}[2020-10-01]
+\ProvidesExplPackage
+  {ccref}
+  {2021/10/29}
+  {}
+  {cleveref with article contraction}
+\RequirePackage{cleveref}
+
+\tl_gset:Nn \g_ccref_prepf_tl {}
+\tl_gset:Nn \g_ccref_prep_tl {}
+
+\NewDocumentCommand{\ccref}{sO{}m}{
+    \IfBooleanTF{ #1 }{
+        \tl_gset:Nn \g_ccref_prep_tl { #2 }
+    }{
+        \tl_gset:Nn \g_ccref_prepf_tl { #2 }
+    }
+    \cref {#3}
+    \tl_gset:Nn \g_ccref_prep_tl {}
+}
+
+\NewDocumentCommand{\ccmarkart}{m}{
+    \ccref_contraction:nn { \tl_use:N \g_ccref_prep_tl }{
+        \ccref_contraction:nn { \tl_use:N \g_ccref_prepf_tl }{#1}
+    }
+    \tl_gset:Nn \g_ccref_prepf_tl {}
+}
+
+\cs_set:Npn \ccref_contraction:nn #1#2 {
+    \str_case_e:nn { \languagename }
+    {
+        {french}{
+            \str_case_e:nnF {#1~#2} {
+                {à~le}      {au}
+                {à~la}      {à~la}
+                {à~l'}      {à~l'}
+                {à~les}     {aux}
+                {de~le}     {du}
+                {de~la}     {de~la}
+                {de~l'}     {de~l'}
+                {de~les}    {des}
+            }{#2}
+        }
+        {italian}{
+            \str_case_e:nnF {#1~#2} {
+                {a~il}      {al}
+                {a~lo}      {allo}
+                {a~l'}      {all'}
+                {a~la}      {alla}
+                {di~il}     {del}
+                {di~lo}     {dello}
+                {di~l'}     {dell'}
+                {di~la}     {della}
+                {da~il}     {dal}
+                {da~lo}     {dallo}
+                {da~l'}     {dall'}
+                {da~la}     {dalla}
+                {in~il}     {nel}
+                {in~lo}     {nello}
+                {in~l'}     {nell'}
+                {in~la}     {nella}
+                {su~il}     {sul}
+                {su~lo}     {sullo}
+                {su~l'}     {sull'}
+                {su~la}     {sulla}
+                {a~i}       {ai}
+                {a~gli}     {agli}
+                {a~le}      {alle}
+                {di~i}      {dei}
+                {di~gli}    {degli}
+                {di~le}     {delle}
+                {da~i}      {dai}
+                {da~gli}    {dagli}
+                {da~le}     {dalle}
+                {in~i}      {nei}
+                {in~gli}    {negli}
+                {in~le}     {nelle}
+                {su~i}      {sui}
+                {su~gli}    {sugli}
+                {su~le}     {sulle}
+            }{#2}
+        }
+        {portuguese}{
+            \str_case_e:nnF {#1~#2} {
+                {a~o}       {ao}
+                {a~a}       {à}
+                {a~os}      {aos}
+                {a~as}      {às}
+                {de~o}      {do}
+                {de~a}      {da}
+                {de~os}     {dos}
+                {de~as}     {das}
+                {em~o}      {no}
+                {em~a}      {na}
+                {em~os}     {nos}
+                {em~as}     {nas}
+            }{#2}
+        }
+        {brazilian}{
+            \str_case_e:nnF {#1~#2} {
+                {a~o}       {ao}
+                {a~a}       {à}
+                {a~os}      {aos}
+                {a~as}      {às}
+                {de~o}      {do}
+                {de~a}      {da}
+                {de~os}     {dos}
+                {de~as}     {das}
+                {em~o}      {no}
+                {em~a}      {na}
+                {em~os}     {nos}
+                {em~as}     {nas}
+            }{#2}
+        }
+        {spanish}{
+            \str_case_e:nnF {#1~#2} {
+                {a~el}      {al}
+                {de~el}     {del}
+            }{#2}
+        }
+    }
+}
+\endinput
+%%
+%% End of file `ccref.sty'.
