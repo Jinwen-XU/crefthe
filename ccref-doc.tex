@@ -70,7 +70,7 @@
 \newenvironment{demo}{%
     \LocallyStopLineNumbers%
     \begin{tcolorbox}[enhanced jigsaw,pad at break*=1mm,breakable,
-        left=4mm,right=4mm,top=1mm,bottom=1mm,
+        left=4mm,right=4mm,top=0.5mm,bottom=0mm,
         colback=gray!5!paper,boxrule=0pt,frame hidden,
         borderline west={1.5mm}{0mm}{gray!55!paper},arc=.7mm]%
 }{\end{tcolorbox}\ResumeLineNumbers}
@@ -81,7 +81,7 @@
 
 \begin{document}
 
-\title{\ccrefpackage{} - cleveref with proper definite articles}
+\title{\ccrefpackage{} - cross referencing with proper definite articles}
 \author{Jinwen XU}
 \date{October 2021, in Paris}
 
@@ -89,27 +89,27 @@
 
 \begin{abstract}
     \raggedleft
-    The package \ccrefpackage{} is aimed at helping \lstinline|\cref| addressing the definite articles properly (especially for the article contractions in many European languages).
+    The package \ccrefpackage{} provides the command \lstinline|\ccref| parallel to \textsf{cleveref}'s \lstinline|\cref| for handling definite articles properly (especially for the article contractions in many European languages).
 \end{abstract}
 
 \section{The motivation}
 
 By default, when using \textsf{cleveref}'s \lstinline|\cref| to reference theorem-like environments, the names do not contain definite articles. This may be acceptable for English, but certainly not good enough for languages such as French, Italian, Portuguese, Spanish, etc. -- in these cases there shall be grammatical errors and would give you a strong feeling that it is machine-generated.
 
-As an example, if we define the French names to be:
+However, even if we manually add the definite articles in the names, there would still be other problems. As an example, if we define the French names to be:
 
 \begin{code}
 \crefname{theorem}{le théorème}{les théorème}
 \crefname{proposition}{la proposition}{les propositions}
 \end{code}
 
-then when one writes (which means ``\emph{We can deduce this from ...}'' in French)
+then when one writes (which is ``\emph{We can deduce this from ...}'' in French)
 
 \begin{code}
 On peut le déduire de \cref{thm1,thm2,prop3}.
 \end{code}
 
-the result would be
+the result would be:
 
 \begin{demo}
     On peut le déduire \textbf{de les} théorèmes 1 et 2 et \textbf{la} proposition 3.
@@ -128,7 +128,7 @@ which is wrong, as the correct result should be:
 
 \subsection[How to load it]{How to load it\,?}
 
-Simply load the package with
+Simply load the package with:
 
 \begin{code}
 \usepackage{ccref}
@@ -185,7 +185,7 @@ which would result in:
     On peut le déduire \textbf{des} théorèmes 1 et 2 et \textbf{de la} proposition 3.
 \end{demo}
 
-As another example, with
+As another example, with (which is ``\emph{Think of ...}'' in French):
 
 \begin{code}
 Pensez \ccref*[à]{thm1,thm2,prop3}.

@@ -1,6 +1,6 @@
 <!-- Copyright (C) 2021 by Jinwen XU -->
 
-# ccref - cleveref with proper definite articles
+# ccref - cross referencing with proper definite articles
 
 "ccref" is a LaTeX package aimed at helping `\cref` addressing the definite articles properly (especially for the article contractions in many European languages).
 
