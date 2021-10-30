@@ -10,14 +10,14 @@ By default, when using cleveref's `\cref` to reference theorem-like environments
 
 As an example, if we define the French names to be:
 ```latex
-\crefname{theorem}{le théorème}{les théorème}
+\crefname{theorem}{le théorème}{les théorèmes}
 \crefname{proposition}{la proposition}{les propositions}
 ```
-Then when one writes
+Then when one writes (which means "*We can deduce this from ...*"):
 ```latex
 On peut le déduire de \cref{thm1,thm2,prop3}.
 ```
-(which means "*We can deduce this from ...*") the result would be
+the result would be:
 > On peut le déduire **de les** théorèmes 1 et 2 et **la** proposition 3.
 
 which is wrong, as the correct result should be:
@@ -29,10 +29,9 @@ which is wrong, as the correct result should be:
 
 Thus, it would be better to have a new command `\ccref[<prep>]{<labels>}`, and to use it like
 ```
-\ccref*[de]{thm1,thm2,prop3}
+\ccref[de]{thm1,thm2,prop3}
 ```
 in order to get "*des théorèmes 1 et 2 et de la proposition 3*".
-> The asterisk `*` here indicates that the preposition "de" will act on every definite article.
 
 # Usage
 
@@ -43,14 +42,16 @@ Just load the package with
 > "ccref" uses "cleveref" internally, thus it should usually be placed at the last of your preamble.
 
 And then you can use the command `\ccref` as follows:
- - `\ccref[<prep>]{<labels>}`
-    - This will pass the `<prep>` to the first definite article.
- - `\ccref*[<prep>]{<labels>}`
-    - This will pass the `<prep>` to every definite article.
+- `\ccref[<prep>]{<labels>}`
+   - This will pass the preposition `<prep>` to the definite articles that follows. Its behavior depends on the current language (for example, in Spanish, `<prep>` is passed only to the first definite article, while in French it is passed to everyone).
+- `\ccref-[<prep>]{<labels>}` and `\ccref+[<prep>]{<labels>}`
+   - In case the automatic version does not meet your needs, here are two manual ones. The `-` version passes the preposition `<prep>` only to the first definite article, while the `+` version passes `<prep>` to every definite article.
+
+> There is also a stared version `\ccref*` for generating the same text but without hyperlinks.
 
 However, before using it, you should first define the `\crefname`s carefully. The definite article in `\crefname`s needs to be marked manually using `\ccmarkart`, for example:
 ```latex
-\crefname{theorem}{\ccmarkart{le} théorème}{\ccmarkart{les} théorème}
+\crefname{theorem}{\ccmarkart{le} théorème}{\ccmarkart{les} théorèmes}
 ```
 
 
