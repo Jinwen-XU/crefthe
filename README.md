@@ -1,8 +1,8 @@
 <!-- Copyright (C) 2021 by Jinwen XU -->
 
-# ccref - cross referencing with proper definite articles
+# crefthe - cross referencing with proper definite articles
 
-"ccref" is a LaTeX package aimed at helping `\cref` addressing the definite articles properly (especially for the article contractions in many European languages).
+"crefthe" is a LaTeX package aimed at helping `\cref` addressing the definite articles properly (especially for the article contractions in many European languages).
 
 ## Motivation
 
@@ -27,9 +27,9 @@ which is wrong, as the correct result should be:
 
 ## The solution
 
-Thus, it would be better to have a new command `\ccref[<prep>]{<labels>}`, and to use it like
+Thus, it would be better to have a new command `\crefthe[<prep>]{<labels>}`, and to use it like
 ```
-\ccref[de]{thm1,thm2,prop3}
+\crefthe[de]{thm1,thm2,prop3}
 ```
 in order to get "*des théorèmes 1 et 2 et de la proposition 3*".
 
@@ -37,21 +37,21 @@ in order to get "*des théorèmes 1 et 2 et de la proposition 3*".
 
 Just load the package with
 ```latex
-\usepackage{ccref}
+\usepackage{crefthe}
 ```
-> "ccref" uses "cleveref" internally, thus it should usually be placed at the last of your preamble.
+> "crefthe" uses "cleveref" internally, thus it should usually be placed at the last of your preamble.
 
-And then you can use the command `\ccref` as follows:
-- `\ccref[<prep>]{<labels>}`
+And then you can use the command `\crefthe` as follows:
+- `\crefthe[<prep>]{<labels>}`
    - This will pass the preposition `<prep>` to the definite articles that follows. Its behavior depends on the current language (for example, in Spanish, `<prep>` is passed only to the first definite article, while in French it is passed to everyone).
-- `\ccref-[<prep>]{<labels>}` and `\ccref+[<prep>]{<labels>}`
+- `\crefthe-[<prep>]{<labels>}` and `\crefthe+[<prep>]{<labels>}`
    - In case the automatic version does not meet your needs, here are two manual ones. The `-` version passes the preposition `<prep>` only to the first definite article, while the `+` version passes `<prep>` to every definite article.
 
-> There is also a stared version `\ccref*` for generating the same text but without hyperlinks.
+> There is also a stared version `\crefthe*` for generating the same text but without hyperlinks.
 
-However, before using it, you should first define the `\crefname`s carefully. The definite article in `\crefname`s needs to be marked manually using `\ccmarkart`, for example:
+However, before using it, you should first define the `\crefname`s carefully. The definite article in `\crefname`s needs to be marked manually using `\crefthemark`, for example:
 ```latex
-\crefname{theorem}{\ccmarkart{le} théorème}{\ccmarkart{les} théorèmes}
+\crefname{theorem}{\crefthemark{le} théorème}{\crefthemark{les} théorèmes}
 ```
 
 

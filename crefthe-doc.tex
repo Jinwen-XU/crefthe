@@ -31,7 +31,7 @@
 \lstset{moretexcs=%
     {
         cref,crefname,
-        ccref,ccmarkart,
+        crefthe,ccref,crefthemark,
         selectlanguage,
     }
 }
@@ -80,20 +80,20 @@
 }{\end{tcolorbox}\ResumeLineNumbers}
 
 
-\newcommand{\ccrefpackage}{\textsf{ccref}}
+\newcommand{\crefthepackage}{\textsf{crefthe}}
 
 \begin{document}
 
-\title{\ccrefpackage{} - cross referencing with proper definite articles}
+\title{\crefthepackage{} - cross referencing with proper definite articles}
 \author{Jinwen XU}
-\thanks{Corresponding to: \texttt{\ccrefpackage{} 2021/10/30}}
-\date{October 2021, in Paris}
+\thanks{Corresponding to: \texttt{\crefthepackage{} 2021/11/05}}
+\date{November 2021, in Paris}
 
 \maketitle
 
 \begin{abstract}
     \raggedleft
-    The package \ccrefpackage{} provides a command \lstinline|\ccref| parallel to \textsf{cleveref}'s \lstinline|\cref| for handling definite articles properly (especially for the article contractions in some European languages).
+    The package \crefthepackage{} provides a command \lstinline|\crefthe| parallel to \textsf{cleveref}'s \lstinline|\cref| for handling definite articles properly (especially for the article contractions in some European languages).
 \end{abstract}
 
 \section{The motivation}
@@ -125,7 +125,7 @@ which is wrong, as the correct result should be:
     On peut le déduire \textbf{des} théorèmes 1 et 2 et \textbf{de la} proposition 3.
 \end{demo}
 
-\lstinline|\cref| cannot handle such cases automatically --- and that is when \lstinline|\ccref| comes into play.
+\lstinline|\cref| cannot handle such cases automatically --- that is when \lstinline|\crefthe| comes into play.
 
 
 \section{The usage}
@@ -135,38 +135,39 @@ which is wrong, as the correct result should be:
 Simply load the package with:
 
 \begin{code}
-\usepackage{ccref}
+\usepackage{crefthe}
 \end{code}
 
 \begin{tip}
     \begin{itemize}
-        \item Since \ccrefpackage{} uses \textsf{cleveref} internally, it should usually be placed at the last of your preamble, and notably, after \textsf{varioref} and \textsf{hyperref}.
-        \item To handle article contractions correctly, \lstinline|\ccref| shall detect the current language, thus you need to use packages such as \textsf{babel} or \textsf{polyglossia} to set your languages, and use commands like \lstinline|\selectlanguage| to select them appropriately.
+        \item Since \crefthepackage{} uses \textsf{cleveref} internally, it should usually be placed at the last of your preamble, and notably, after \textsf{varioref} and \textsf{hyperref}.
+        \item To handle article contractions correctly, \lstinline|\crefthe| shall detect the current language, thus you need to use packages such as \textsf{babel} or \textsf{polyglossia} to set your languages, and use commands like \lstinline|\selectlanguage| to select them appropriately.
     \end{itemize}
 \end{tip}
 
 \subsection[How to use it]{How to use it\,?}
 
-Then you can use the command \lstinline|\ccref| as follows:
+Then you can use the command \lstinline|\crefthe| as follows:
 \begin{itemize}
-    \item \lstinline|\ccref[|\meta{prep}\lstinline|]{|\meta{labels}\lstinline|}|
+    \item \lstinline|\crefthe[|\meta{prep}\lstinline|]{|\meta{labels}\lstinline|}|
     \begin{itemize}
         \item This will pass the preposition \meta{prep} to the definite articles that follows. Its behavior depends on the current language (for example, in Spanish, \meta{prep} is passed only to the first definite article, while in French it is passed to everyone).
     \end{itemize}
-    \item \lstinline|\ccref-[|\meta{prep}\lstinline|]{|\meta{labels}\lstinline|}| and \lstinline|\ccref+[|\meta{prep}\lstinline|]{|\meta{labels}\lstinline|}|
+    \item \lstinline|\crefthe-[|\meta{prep}\lstinline|]{|\meta{labels}\lstinline|}| and \lstinline|\crefthe+[|\meta{prep}\lstinline|]{|\meta{labels}\lstinline|}|
     \begin{itemize}
         \item In case the automatic version does not meet your needs, here are two manual ones. The \verb|-| version passes the preposition \meta{prep} only to the first definite article, while the \verb|+| version passes \meta{prep} to every definite article.
     \end{itemize}
 \end{itemize}
 
 \begin{tip}
-    There is also a stared version \lstinline|\ccref*| for generating the same referencing text but without creating hyperlinks.
+    There is also a stared version \lstinline|\crefthe*| for generating the same referencing text but without creating hyperlinks.
 \end{tip}
-
-However, before using it, you should first define the \lstinline|\crefname|s carefully. The definite article in \lstinline|\crefname|s needs to be marked manually using \lstinline|\ccmarkart|, for example:
+ 
+However, before using it, you should first define the \lstinline|\crefname|s carefully. The definite article in \lstinline|\crefname|s needs to be marked manually using \lstinline|\crefthemark|, for example:
 
 \begin{code}
-\crefname{theorem}{\ccmarkart{le} théorème}{\ccmarkart{les} théorèmes}
+\crefname{theorem}{\crefthemark{le} théorème}
+                  {\crefthemark{les} théorèmes}
 \end{code}
 
 
@@ -175,16 +176,16 @@ However, before using it, you should first define the \lstinline|\crefname|s car
 Let us come back to the example at the beginning, now you can do this:
 
 \begin{code}
-\crefname{theorem}{\ccmarkart{le} théorème}
-                  {\ccmarkart{les} théorèmes}
-\crefname{proposition}{\ccmarkart{la} proposition}
-                      {\ccmarkart{les} propositions}
+\crefname{theorem}{\crefthemark{le} théorème}
+                  {\crefthemark{les} théorèmes}
+\crefname{proposition}{\crefthemark{la} proposition}
+                      {\crefthemark{les} propositions}
 \end{code}
 
 And the sentence shall be written as:
 
 \begin{code}
-On peut le déduire \ccref[de]{thm1,thm2,prop3}.
+On peut le déduire \crefthe[de]{thm1,thm2,prop3}.
 \end{code}
 
 which would result in (provided that you have done \lstinline|\selectlanguage{french}|):
@@ -198,9 +199,9 @@ Voilà !
 
 \section{Known issues}
 \begin{itemize}
-    \item \ccrefpackage{} currently only works for French, Italian, Portuguese (both European and Brazilian) and Spanish, certainly more would be added to this list.
+    \item \crefthepackage{} currently only works for French, Italian, Portuguese (both European and Brazilian) and Spanish, certainly more would be added to this list.
     \item The current mechanism does not work for German. However, the author has planed to adopt a more refined approach in later versions in order to support the various situations in German.
-    \item In case that the initial letter of \meta{prep} is capitalized, \ccrefpackage{} cannot yet handle the case changes automatically. However, this should be a rare occurrence.
+    \item In case that the initial letter of \meta{prep} is capitalized, \crefthepackage{} cannot yet handle the case changes automatically. However, this should be a rare occurrence.
     \item The names of theorem-like environments are not provided --- for the moment you need to define them all by yourself. However, users are encouraged to use the \ProjLib{} toolkit, which already handles everything for you.
 \end{itemize}
 

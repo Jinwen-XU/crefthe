@@ -11,40 +11,40 @@
 %%
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
 \ProvidesExplPackage
-  {ccref}
-  {2021/10/30}
+  {crefthe}
+  {2021/11/05}
   {}
   {Cross referencing with proper definite articles}
 \RequirePackage{cleveref}
 
-\tl_gset:Nn \g_ccref_prepf_tl {}
-\tl_gset:Nn \g_ccref_prep_tl {}
+\tl_gset:Nn \g_crefthe_prepf_tl {}
+\tl_gset:Nn \g_crefthe_prep_tl {}
 
-\NewDocumentCommand{\ccref}{st-t+O{}m}{
+\NewDocumentCommand{\crefthe}{st-t+O{}m}{
     \IfBooleanTF{ #2 }{
-        \tl_gset:Nn \g_ccref_prepf_tl { #4 }
+        \tl_gset:Nn \g_crefthe_prepf_tl { #4 }
     }{
         \IfBooleanTF{ #3 }{
-            \tl_gset:Nn \g_ccref_prep_tl { #4 }
+            \tl_gset:Nn \g_crefthe_prep_tl { #4 }
         }{
-            \str_case_e:nn { \ccref_prep_mode:nn } {
-                { - } { \tl_gset:Nn \g_ccref_prepf_tl { #4 } }
-                { + } { \tl_gset:Nn \g_ccref_prep_tl  { #4 } }
+            \str_case_e:nn { \crefthe_prep_mode:nn } {
+                { - } { \tl_gset:Nn \g_crefthe_prepf_tl { #4 } }
+                { + } { \tl_gset:Nn \g_crefthe_prep_tl  { #4 } }
             }
         }
     }
     \IfBooleanTF{ #1 } { \cref*{#5} } { \cref{#5} }
-    \tl_gset:Nn \g_ccref_prep_tl {}
+    \tl_gset:Nn \g_crefthe_prep_tl {}
 }
 
-\NewDocumentCommand{\ccmarkart}{m}{
-    \ccref_contraction:nn { \tl_use:N \g_ccref_prep_tl }{
-        \ccref_contraction:nn { \tl_use:N \g_ccref_prepf_tl }{#1}
+\NewDocumentCommand{\crefthemark}{m}{
+    \crefthe_contraction:nn { \tl_use:N \g_crefthe_prep_tl }{
+        \crefthe_contraction:nn { \tl_use:N \g_crefthe_prepf_tl }{#1}
     }
-    \tl_gset:Nn \g_ccref_prepf_tl {}
+    \tl_gset:Nn \g_crefthe_prepf_tl {}
 }
 
-\cs_set:Npn \ccref_prep_mode:nn {
+\cs_set:Npn \crefthe_prep_mode:nn {
     \str_case_e:nn { \languagename }
     {
         {french}        { + }
@@ -55,7 +55,7 @@
     }
 }
 
-\cs_set:Npn \ccref_contraction:nn #1#2 {
+\cs_set:Npn \crefthe_contraction:nn #1#2 {
     \str_if_eq:eeTF {#1} {} {#2} {
         \str_case_e:nn { \languagename }
         {
@@ -153,4 +153,4 @@
 }
 \endinput
 %%
-%% End of file `ccref.sty'.
+%% End of file `crefthe.sty'.
