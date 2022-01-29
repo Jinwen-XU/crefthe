@@ -21,6 +21,7 @@
 
 \tl_gset:Nn \g_crefthe_prepf_tl {}
 \tl_gset:Nn \g_crefthe_prep_tl {}
+\tl_gset:Nn \g_crefthe_sep_tl {}
 \cs_new:Nn \crefthe_case:n {#1}
 \cs_new:Nn \crefthe_nochange:n {#1}
 \cs_new:Nn \crefthe_atbegindocument:n {#1}
@@ -69,14 +70,14 @@
 }
 
 \NewDocumentCommand{\crefthename}{mO{}mO{}m}{
-    \IfValueTF{#2}{
-        \crefname{#1}{\crefthemark{#2}~#3}{\crefthemark{#4}~#5}
-        \cs_set:cn {cref_#1_format:nnn} {\crefthemark{#2}~##2#3~##1##3}
-        \cs_set:cn {cref_#1_format_first:nnn} {\crefthemark{#4}~##2#5~##1##3}
-    }{
+    \str_if_eq:eeTF {#2} {} {
         \crefname{#1}{#3}{#5}
         \cs_set:cn {cref_#1_format:nnn} {##2#3~##1##3}
         \cs_set:cn {cref_#1_format_first:nnn} {##2#5~##1##3}
+    }{
+        \crefname{#1}{\crefthemark{#2} \g_crefthe_sep_tl #3}{\crefthemark{#4} \g_crefthe_sep_tl #5}
+        \cs_set:cn {cref_#1_format:nnn} {\crefthemark{#2} \g_crefthe_sep_tl ##2#3~##1##3}
+        \cs_set:cn {cref_#1_format_first:nnn} {\crefthemark{#4} \g_crefthe_sep_tl ##2#5~##1##3}
     }
     \crefthe_set_status_atbegindocument:
     \crefthe_atbegindocument:n {
@@ -86,14 +87,14 @@
 }
 
 \NewDocumentCommand{\Crefthename}{mO{}mO{}m}{
-    \IfValueTF{#2}{
-        \Crefname{#1}{\crefthemark{#2}~#3}{\crefthemark{#4}~#5}
-        \cs_set:cn {Cref_#1_format:nnn} {\crefthemark{#2}~##2#3~##1##3}
-        \cs_set:cn {Cref_#1_format_first:nnn} {\crefthemark{#4}~##2#5~##1##3}
-    }{
+    \str_if_eq:eeTF {#2} {} {
         \Crefname{#1}{#3}{#5}
         \cs_set:cn {Cref_#1_format:nnn} {##2#3~##1##3}
         \cs_set:cn {Cref_#1_format_first:nnn} {##2#5~##1##3}
+    }{
+        \Crefname{#1}{\crefthemark{#2} \g_crefthe_sep_tl #3}{\crefthemark{#4} \g_crefthe_sep_tl #5}
+        \cs_set:cn {Cref_#1_format:nnn} {\crefthemark{#2} \g_crefthe_sep_tl ##2#3~##1##3}
+        \cs_set:cn {Cref_#1_format_first:nnn} {\crefthemark{#4} \g_crefthe_sep_tl ##2#5~##1##3}
     }
     \crefthe_set_status_atbegindocument:
     \crefthe_atbegindocument:n {
@@ -108,6 +109,10 @@
     }
     \tl_gset:Nn \g_crefthe_prepf_tl {}
     \tl_gset:Nx \g_crefthe_prep_tl { \text_lowercase:n \g_crefthe_prep_tl }
+    \str_case_e:nnF {\str_tail:n {#1}} {
+        {'} { \tl_gset:Nn \g_crefthe_sep_tl {} }
+    }
+    { \tl_gset:Nn \g_crefthe_sep_tl {~} }
     \cs_gset_eq:NN \crefthe_case:n \crefthe_nochange:n
     % \cs_gset_eq:NN \crefthe_case:n \text_lowercase:n
 }
