@@ -31,7 +31,10 @@
 \lstset{moretexcs=%
     {
         cref,crefname,
-        crefthe,ccref,crefthemark,
+        Cref,Crefname,
+        crefformat,
+        crefthe,crefthename,crefthemark,
+        Crefthe,Crefthename,
         selectlanguage,
     }
 }
@@ -86,8 +89,8 @@
 
 \title{\crefthepackage{} - cross referencing with proper definite articles}
 \author{Jinwen XU}
-\thanks{Corresponding to: \texttt{\crefthepackage{} 2021/11/05}}
-\date{November 2021, in Paris}
+\thanks{Corresponding to: \texttt{\crefthepackage{} 2022/01/29}}
+\date{January 2022, in Paris}
 
 \maketitle
 
@@ -147,6 +150,16 @@ Simply load the package with:
 
 \subsection[How to use it]{How to use it\,?}
 
+Before everything, you need to define the names, which can be done with \lstinline|\crefthename|. Its syntax is similar to \lstinline|\crefname|, but now you can specify the definite articles, for example:
+
+\begin{code}
+\crefthename{theorem}[le]{théorème}[les]{théorèmes}
+\end{code}
+
+% \begin{tip}
+%     The \lstinline|\crefthename|s should be placed in your preamble.
+% \end{tip}
+
 Then you can use the command \lstinline|\crefthe| as follows:
 \begin{itemize}
     \item \lstinline|\crefthe[|\meta{prep}\lstinline|]{|\meta{labels}\lstinline|}|
@@ -162,13 +175,13 @@ Then you can use the command \lstinline|\crefthe| as follows:
 \begin{tip}
     There is also a stared version \lstinline|\crefthe*| for generating the same referencing text but without creating hyperlinks.
 \end{tip}
- 
-However, before using it, you should first define the \lstinline|\crefname|s carefully. The definite article in \lstinline|\crefname|s needs to be marked manually using \lstinline|\crefthemark|, for example:
 
-\begin{code}
-\crefname{theorem}{\crefthemark{le} théorème}
-                  {\crefthemark{les} théorèmes}
-\end{code}
+% However, before using it, you should first define the \lstinline|\crefname|s carefully. The definite article in \lstinline|\crefname|s needs to be marked manually using \lstinline|\crefthemark|, for example:
+
+% \begin{code}
+% \crefname{theorem}{\crefthemark{le} théorème}
+%                   {\crefthemark{les} théorèmes}
+% \end{code}
 
 
 \section{Example}
@@ -176,10 +189,8 @@ However, before using it, you should first define the \lstinline|\crefname|s car
 Let us come back to the example at the beginning, now you can do this:
 
 \begin{code}
-\crefname{theorem}{\crefthemark{le} théorème}
-                  {\crefthemark{les} théorèmes}
-\crefname{proposition}{\crefthemark{la} proposition}
-                      {\crefthemark{les} propositions}
+\crefthename{theorem}[le]{théorème}[les]{théorèmes}
+\crefthename{proposition}[la]{proposition}[les]{propositions}
 \end{code}
 
 And the sentence shall be written as:
@@ -196,12 +207,35 @@ which would result in (provided that you have done \lstinline|\selectlanguage{fr
 
 Voilà !
 
+\section{Regarding the cases}
+
+The commands also have correspoding uppercased version: \lstinline|\Crefthename| and \lstinline|\Crefthe|, similar to \textsf{cleveref}'s \lstinline|\Crefname| and \lstinline|\Cref|, reserved for use at the beginning of a sentence. \lstinline|\Crefthe| can handle case changing automatically: for example, with \lstinline|\Crefthe[À]{thm1,thm2,prop3}|, you will get something like
+
+\begin{demo}
+    \textbf{Aux} théorèmes 1 et 2 et \textbf{à la} proposition 3
+\end{demo}
+
+Of course you will have to define the \lstinline|\Crefthename|s separately, for example as:
+
+\begin{code}
+\Crefthename{theorem}[Le]{théorème}[Les]{théorèmes}
+\Crefthename{proposition}[La]{proposition}[Les]{propositions}
+\end{code}
+
+\section{Relationship with \textsf{cleveref}}
+
+\crefthepackage{} loads \textsf{cleveref} automatically and pass all the options to it. All its commands, used without optional arguments, degenerate to those in \textsf{cleveref}. For example, \lstinline|\crefthe{...}| is the same as \lstinline|\cref{...}|, and \lstinline|\crefthename| is the same as \lstinline|\crefname| if the definite articles are not specified. That said, you can safely use the command \lstinline|\crefthe| everywhere in your document without causing extra trouble.
+
+\section{For multi-language documents}
+
+To place hyperlinks at the right place, \lstinline|\crefthename| touches the corresponding \lstinline|\crefformat| internally, which makes it language-dependent. If you are writing multi-language documents, you may like to consider putting \lstinline|\crefthename| inside your language configuration so as to reset it each time you select a new language.
 
 \section{Known issues}
 \begin{itemize}
-    \item \crefthepackage{} currently only works for French, Italian, Portuguese (both European and Brazilian) and Spanish, certainly more would be added to this list.
+    \item \crefthepackage{} currently only works for French, Italian, Portuguese (European and Brazilian) and Spanish, certainly more would be added to this list.
     \item The current mechanism does not work for German. However, the author has planed to adopt a more refined approach in later versions in order to support the various situations in German.
-    \item In case that the initial letter of \meta{prep} is capitalized, \crefthepackage{} cannot yet handle the case changes automatically. However, this should be a rare occurrence.
+    \item For now, the automatic case changing mechanism only works properly under Unicode based engines. If you are using pdf\LaTeX{} or typing accented letters with text commands, \lstinline|\Crefthe| will not work as expected.
+    % \item In case that the initial letter of \meta{prep} is capitalized, \crefthepackage{} cannot yet handle the case changes automatically. However, this should be a rare occurrence.
     \item The names of theorem-like environments are not provided --- for the moment you need to define them all by yourself. However, users are encouraged to use the \ProjLib{} toolkit, which already handles everything for you.
 \end{itemize}
 

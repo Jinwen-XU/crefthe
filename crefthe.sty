@@ -1,5 +1,5 @@
 %%
-%% Copyright (C) 2021 by Jinwen XU
+%% Copyright (C) 2021-2022 by Jinwen XU
 %% -------------------------------
 %%
 %% This file may be distributed and/or modified under the conditions of
@@ -12,13 +12,26 @@
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
 \ProvidesExplPackage
   {crefthe}
-  {2021/11/05}
+  {2022/01/29}
   {}
   {Cross referencing with proper definite articles}
+\DeclareOption*{\PassOptionsToPackage{\CurrentOption}{cleveref}}
+\ProcessOptions\relax
 \RequirePackage{cleveref}
 
 \tl_gset:Nn \g_crefthe_prepf_tl {}
 \tl_gset:Nn \g_crefthe_prep_tl {}
+\cs_new:Nn \crefthe_case:n {#1}
+\cs_new:Nn \crefthe_nochange:n {#1}
+\cs_new:Nn \crefthe_atbegindocument:n {#1}
+
+\cs_new:Nn \crefthe_set_status_atbegindocument: {
+    \cs_if_eq:NNTF \@onlypreamble \@notprerr {
+        \cs_gset_eq:NN \crefthe_atbegindocument:n \crefthe_nochange:n
+    }{
+        \cs_gset_eq:NN \crefthe_atbegindocument:n \AtBeginDocument
+    }
+}
 
 \NewDocumentCommand{\crefthe}{st-t+O{}m}{
     \IfBooleanTF{ #2 }{
@@ -37,11 +50,66 @@
     \tl_gset:Nn \g_crefthe_prep_tl {}
 }
 
+\NewDocumentCommand{\Crefthe}{st-t+O{}m}{
+    \cs_gset_eq:NN \crefthe_case:n \text_titlecase:n
+    \IfBooleanTF{ #2 }{
+        \tl_gset:Nn \g_crefthe_prepf_tl { #4 }
+    }{
+        \IfBooleanTF{ #3 }{
+            \tl_gset:Nn \g_crefthe_prep_tl { #4 }
+        }{
+            \str_case_e:nn { \crefthe_prep_mode:nn } {
+                { - } { \tl_gset:Nn \g_crefthe_prepf_tl { #4 } }
+                { + } { \tl_gset:Nn \g_crefthe_prep_tl  { #4 } }
+            }
+        }
+    }
+    \IfBooleanTF{ #1 } { \Cref*{#5} } { \Cref{#5} }
+    \tl_gset:Nn \g_crefthe_prep_tl {}
+}
+
+\NewDocumentCommand{\crefthename}{mO{}mO{}m}{
+    \IfValueTF{#2}{
+        \crefname{#1}{\crefthemark{#2}~#3}{\crefthemark{#4}~#5}
+        \cs_set:cn {cref_#1_format:nnn} {\crefthemark{#2}~##2#3~##1##3}
+        \cs_set:cn {cref_#1_format_first:nnn} {\crefthemark{#4}~##2#5~##1##3}
+    }{
+        \crefname{#1}{#3}{#5}
+        \cs_set:cn {cref_#1_format:nnn} {##2#3~##1##3}
+        \cs_set:cn {cref_#1_format_first:nnn} {##2#5~##1##3}
+    }
+    \crefthe_set_status_atbegindocument:
+    \crefthe_atbegindocument:n {
+        \cs_set_eq:cc {cref@#1@format} {cref_#1_format:nnn}
+        \cs_set_eq:cc {cref@#1@format@first} {cref_#1_format_first:nnn}
+    }
+}
+
+\NewDocumentCommand{\Crefthename}{mO{}mO{}m}{
+    \IfValueTF{#2}{
+        \Crefname{#1}{\crefthemark{#2}~#3}{\crefthemark{#4}~#5}
+        \cs_set:cn {Cref_#1_format:nnn} {\crefthemark{#2}~##2#3~##1##3}
+        \cs_set:cn {Cref_#1_format_first:nnn} {\crefthemark{#4}~##2#5~##1##3}
+    }{
+        \Crefname{#1}{#3}{#5}
+        \cs_set:cn {Cref_#1_format:nnn} {##2#3~##1##3}
+        \cs_set:cn {Cref_#1_format_first:nnn} {##2#5~##1##3}
+    }
+    \crefthe_set_status_atbegindocument:
+    \crefthe_atbegindocument:n {
+        \cs_set_eq:cc {Cref@#1@format} {Cref_#1_format:nnn}
+        \cs_set_eq:cc {Cref@#1@format@first} {Cref_#1_format_first:nnn}
+    }
+}
+
 \NewDocumentCommand{\crefthemark}{m}{
-    \crefthe_contraction:nn { \tl_use:N \g_crefthe_prep_tl }{
-        \crefthe_contraction:nn { \tl_use:N \g_crefthe_prepf_tl }{#1}
+    \crefthe_contraction:nn { \crefthe_case:n \g_crefthe_prep_tl }{
+        \crefthe_contraction:nn { \crefthe_case:n \g_crefthe_prepf_tl }{#1}
     }
     \tl_gset:Nn \g_crefthe_prepf_tl {}
+    \tl_gset:Nx \g_crefthe_prep_tl { \text_lowercase:n \g_crefthe_prep_tl }
+    \cs_gset_eq:NN \crefthe_case:n \crefthe_nochange:n
+    % \cs_gset_eq:NN \crefthe_case:n \text_lowercase:n
 }
 
 \cs_set:Npn \crefthe_prep_mode:nn {
@@ -60,19 +128,19 @@
         \str_case_e:nn { \languagename }
         {
             {french}{
-                \str_case_e:nnF {#1~#2} {
+                \str_case_e:nnF {#1~\text_lowercase:n{#2}} {
                     {à~le}      {au}
-                    {à~la}      {à~la}
-                    {à~l'}      {à~l'}
                     {à~les}     {aux}
                     {de~le}     {du}
-                    {de~la}     {de~la}
-                    {de~l'}     {de~l'}
                     {de~les}    {des}
-                }{#1~#2}
+                    {À~le}      {Au}
+                    {À~les}     {Aux}
+                    {De~le}     {Du}
+                    {De~les}    {Des}
+                }{#1~\text_lowercase:n{#2}}
             }
             {italian}{
-                \str_case_e:nnF {#1~#2} {
+                \str_case_e:nnF {#1~\text_lowercase:n{#2}} {
                     {a~il}      {al}
                     {a~lo}      {allo}
                     {a~l'}      {all'}
@@ -108,10 +176,45 @@
                     {su~i}      {sui}
                     {su~gli}    {sugli}
                     {su~le}     {sulle}
-                }{#1~#2}
+                    {A~il}      {Al}
+                    {A~lo}      {Allo}
+                    {A~l'}      {All'}
+                    {A~la}      {Alla}
+                    {Di~il}     {Del}
+                    {Di~lo}     {Dello}
+                    {Di~l'}     {Dell'}
+                    {Di~la}     {Della}
+                    {Da~il}     {Dal}
+                    {Da~lo}     {Dallo}
+                    {Da~l'}     {Dall'}
+                    {Da~la}     {Dalla}
+                    {In~il}     {Nel}
+                    {In~lo}     {Nello}
+                    {In~l'}     {Nell'}
+                    {In~la}     {Nella}
+                    {Su~il}     {Sul}
+                    {Su~lo}     {Sullo}
+                    {Su~l'}     {Sull'}
+                    {Su~la}     {Sulla}
+                    {A~i}       {Ai}
+                    {A~gli}     {Agli}
+                    {A~le}      {Alle}
+                    {Di~i}      {Dei}
+                    {Di~gli}    {Degli}
+                    {Di~le}     {Delle}
+                    {Da~i}      {Dai}
+                    {Da~gli}    {Dagli}
+                    {Da~le}     {Dalle}
+                    {In~i}      {Nei}
+                    {In~gli}    {Negli}
+                    {In~le}     {Nelle}
+                    {Su~i}      {Sui}
+                    {Su~gli}    {Sugli}
+                    {Su~le}     {Sulle}
+                }{#1~\text_lowercase:n{#2}}
             }
             {portuguese}{
-                \str_case_e:nnF {#1~#2} {
+                \str_case_e:nnF {#1~\text_lowercase:n{#2}} {
                     {a~o}       {ao}
                     {a~a}       {à}
                     {a~os}      {aos}
@@ -124,10 +227,22 @@
                     {em~a}      {na}
                     {em~os}     {nos}
                     {em~as}     {nas}
-                }{#1~#2}
+                    {A~o}       {Ao}
+                    {A~a}       {À}
+                    {A~os}      {Aos}
+                    {A~as}      {Às}
+                    {De~o}      {Do}
+                    {De~a}      {Da}
+                    {De~os}     {Dos}
+                    {De~as}     {Das}
+                    {Em~o}      {No}
+                    {Em~a}      {Na}
+                    {Em~os}     {Nos}
+                    {Em~as}     {Nas}
+                }{#1~\text_lowercase:n{#2}}
             }
             {brazilian}{
-                \str_case_e:nnF {#1~#2} {
+                \str_case_e:nnF {#1~\text_lowercase:n{#2}} {
                     {a~o}       {ao}
                     {a~a}       {à}
                     {a~os}      {aos}
@@ -140,13 +255,27 @@
                     {em~a}      {na}
                     {em~os}     {nos}
                     {em~as}     {nas}
-                }{#1~#2}
+                    {A~o}       {Ao}
+                    {A~a}       {À}
+                    {A~os}      {Aos}
+                    {A~as}      {Às}
+                    {De~o}      {Do}
+                    {De~a}      {Da}
+                    {De~os}     {Dos}
+                    {De~as}     {Das}
+                    {Em~o}      {No}
+                    {Em~a}      {Na}
+                    {Em~os}     {Nos}
+                    {Em~as}     {Nas}
+                }{#1~\text_lowercase:n{#2}}
             }
             {spanish}{
-                \str_case_e:nnF {#1~#2} {
+                \str_case_e:nnF {#1~\text_lowercase:n{#2}} {
                     {a~el}      {al}
                     {de~el}     {del}
-                }{#1~#2}
+                    {A~el}      {Al}
+                    {De~el}     {Del}
+                }{#1~\text_lowercase:n{#2}}
             }
         }
     }
