@@ -28,20 +28,25 @@ which is wrong, as the correct result should be:
 ## The solution
 
 Thus, it would be better to have a new command `\crefthe[<prep>]{<labels>}`, and to use it like
-```
+```latex
 \crefthe[de]{thm1,thm2,prop3}
 ```
 in order to get "*des théorèmes 1 et 2 et de la proposition 3*".
 
 # Usage
 
-Just load the package with
+Simply load the package with:
 ```latex
 \usepackage{crefthe}
 ```
 > "crefthe" uses "cleveref" internally, thus it should usually be placed at the last of your preamble.
 
-And then you can use the command `\crefthe` as follows:
+Before everything, you need to define the names, which can be done with `\crefthename`. Its syntax is similar to `\crefname`, but now you can specify the definite articles, for example:
+```latex
+\crefthename{theorem}[le]{théorème}[les]{théorèmes}
+```
+
+Then you can use the command `\crefthe` as follows:
 - `\crefthe[<prep>]{<labels>}`
    - This will pass the preposition `<prep>` to the definite articles that follows. Its behavior depends on the current language (for example, in Spanish, `<prep>` is passed only to the first definite article, while in French it is passed to everyone).
 - `\crefthe-[<prep>]{<labels>}` and `\crefthe+[<prep>]{<labels>}`
@@ -49,11 +54,7 @@ And then you can use the command `\crefthe` as follows:
 
 > There is also a stared version `\crefthe*` for generating the same text but without hyperlinks.
 
-However, before using it, you should first define the `\crefname`s carefully. The definite article in `\crefname`s needs to be marked manually using `\crefthemark`, for example:
-```latex
-\crefname{theorem}{\crefthemark{le} théorème}{\crefthemark{les} théorèmes}
-```
-
+*For more information, please refer to its documentation.*
 
 # License
 
