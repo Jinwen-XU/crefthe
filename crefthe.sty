@@ -10,13 +10,21 @@
 %%    http://www.latex-project.org/lppl.txt
 %%
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
+\RequirePackage{l3keys2e}
 \ProvidesExplPackage
   {crefthe}
-  {2022/01/29}
-  {}
+  {2022/02/02} {}
   {Cross referencing with proper definite articles}
-\DeclareOption*{\PassOptionsToPackage{\CurrentOption}{cleveref}}
-\ProcessOptions\relax
+
+\keys_define:nn {crefthe}
+  {
+    unknown .code:n =
+      {
+        \PassOptionsToPackage{\CurrentOption}{cleveref}
+      }
+  }
+
+\ProcessKeysOptions{crefthe}
 \RequirePackage{cleveref}
 
 \tl_gset:Nn \g_crefthe_prepf_tl {}
@@ -26,93 +34,118 @@
 \cs_new:Nn \crefthe_nochange:n {#1}
 \cs_new:Nn \crefthe_atbegindocument:n {#1}
 
-\cs_new:Nn \crefthe_set_status_atbegindocument: {
-    \cs_if_eq:NNTF \@onlypreamble \@notprerr {
+\cs_new:Nn \crefthe_set_status_atbegindocument:
+  {
+    \cs_if_eq:NNTF \@onlypreamble \@notprerr
+      {
         \cs_gset_eq:NN \crefthe_atbegindocument:n \crefthe_nochange:n
-    }{
+      }
+      {
         \cs_gset_eq:NN \crefthe_atbegindocument:n \AtBeginDocument
-    }
-}
+      }
+  }
 
-\NewDocumentCommand{\crefthe}{st-t+O{}m}{
-    \IfBooleanTF{ #2 }{
+\NewDocumentCommand{\crefthe}{st-t+O{}m}
+  {
+    \IfBooleanTF{ #2 }
+      {
         \tl_gset:Nn \g_crefthe_prepf_tl { #4 }
-    }{
-        \IfBooleanTF{ #3 }{
+      }
+      {
+        \IfBooleanTF{ #3 }
+          {
             \tl_gset:Nn \g_crefthe_prep_tl { #4 }
-        }{
-            \str_case_e:nn { \crefthe_prep_mode:nn } {
+          }
+          {
+            \str_case_e:nn { \crefthe_prep_mode:nn }
+              {
                 { - } { \tl_gset:Nn \g_crefthe_prepf_tl { #4 } }
                 { + } { \tl_gset:Nn \g_crefthe_prep_tl  { #4 } }
-            }
-        }
-    }
+              }
+          }
+      }
     \IfBooleanTF{ #1 } { \cref*{#5} } { \cref{#5} }
     \tl_gset:Nn \g_crefthe_prep_tl {}
-}
+  }
 
-\NewDocumentCommand{\Crefthe}{st-t+O{}m}{
+\NewDocumentCommand{\Crefthe}{st-t+O{}m}
+  {
     \cs_gset_eq:NN \crefthe_case:n \text_titlecase:n
-    \IfBooleanTF{ #2 }{
+    \IfBooleanTF{ #2 }
+      {
         \tl_gset:Nn \g_crefthe_prepf_tl { #4 }
-    }{
-        \IfBooleanTF{ #3 }{
+      }
+      {
+        \IfBooleanTF{ #3 }
+          {
             \tl_gset:Nn \g_crefthe_prep_tl { #4 }
-        }{
-            \str_case_e:nn { \crefthe_prep_mode:nn } {
+          }
+          {
+            \str_case_e:nn { \crefthe_prep_mode:nn }
+              {
                 { - } { \tl_gset:Nn \g_crefthe_prepf_tl { #4 } }
                 { + } { \tl_gset:Nn \g_crefthe_prep_tl  { #4 } }
-            }
-        }
-    }
+              }
+          }
+      }
     \IfBooleanTF{ #1 } { \Cref*{#5} } { \Cref{#5} }
     \tl_gset:Nn \g_crefthe_prep_tl {}
-}
+  }
 
-\NewDocumentCommand{\crefthename}{mO{}mO{}m}{
-    \str_if_eq:eeTF {#2} {} {
+\NewDocumentCommand{\crefthename}{mO{}mO{}m}
+  {
+    \str_if_eq:eeTF {#2} {}
+      {
         \crefname{#1}{#3}{#5}
         \cs_set:cn {cref_#1_format:nnn} {##2#3~##1##3}
         \cs_set:cn {cref_#1_format_first:nnn} {##2#5~##1##3}
-    }{
+      }
+      {
         \crefname{#1}{\crefthemark{#2} \g_crefthe_sep_tl #3}{\crefthemark{#4} \g_crefthe_sep_tl #5}
         \cs_set:cn {cref_#1_format:nnn} {\crefthemark{#2} \g_crefthe_sep_tl ##2#3~##1##3}
         \cs_set:cn {cref_#1_format_first:nnn} {\crefthemark{#4} \g_crefthe_sep_tl ##2#5~##1##3}
-    }
+      }
     \crefthe_set_status_atbegindocument:
-    \crefthe_atbegindocument:n {
+    \crefthe_atbegindocument:n
+      {
         \cs_set_eq:cc {cref@#1@format} {cref_#1_format:nnn}
         \cs_set_eq:cc {cref@#1@format@first} {cref_#1_format_first:nnn}
-    }
-}
+      }
+  }
 
-\NewDocumentCommand{\Crefthename}{mO{}mO{}m}{
-    \str_if_eq:eeTF {#2} {} {
+\NewDocumentCommand{\Crefthename}{mO{}mO{}m}
+  {
+    \str_if_eq:eeTF {#2} {}
+      {
         \Crefname{#1}{#3}{#5}
         \cs_set:cn {Cref_#1_format:nnn} {##2#3~##1##3}
         \cs_set:cn {Cref_#1_format_first:nnn} {##2#5~##1##3}
-    }{
+      }
+      {
         \Crefname{#1}{\crefthemark{#2} \g_crefthe_sep_tl #3}{\crefthemark{#4} \g_crefthe_sep_tl #5}
         \cs_set:cn {Cref_#1_format:nnn} {\crefthemark{#2} \g_crefthe_sep_tl ##2#3~##1##3}
         \cs_set:cn {Cref_#1_format_first:nnn} {\crefthemark{#4} \g_crefthe_sep_tl ##2#5~##1##3}
-    }
+      }
     \crefthe_set_status_atbegindocument:
-    \crefthe_atbegindocument:n {
+    \crefthe_atbegindocument:n
+      {
         \cs_set_eq:cc {Cref@#1@format} {Cref_#1_format:nnn}
         \cs_set_eq:cc {Cref@#1@format@first} {Cref_#1_format_first:nnn}
-    }
-}
+      }
+  }
 
 \NewDocumentCommand{\crefthemark}{m}{
-    \crefthe_contraction:nn { \crefthe_case:n \g_crefthe_prep_tl }{
+    \crefthe_contraction:nn { \crefthe_case:n \g_crefthe_prep_tl }
+      {
         \crefthe_contraction:nn { \crefthe_case:n \g_crefthe_prepf_tl }{#1}
-    }
+      }
     \tl_gset:Nn \g_crefthe_prepf_tl {}
     \tl_gset:Nx \g_crefthe_prep_tl { \text_lowercase:n \g_crefthe_prep_tl }
-    \str_case_e:nnF {\str_tail:n {#1}} {
+    \str_case_e:nnF {\str_tail:n {#1}}
+      {
         {'} { \tl_gset:Nn \g_crefthe_sep_tl {} }
-    }
-    { \tl_gset:Nn \g_crefthe_sep_tl {~} }
+      }
+      { \tl_gset:Nn \g_crefthe_sep_tl {~} }
     \cs_gset_eq:NN \crefthe_case:n \crefthe_nochange:n
     % \cs_gset_eq:NN \crefthe_case:n \text_lowercase:n
 }
@@ -120,20 +153,25 @@
 \cs_set:Npn \crefthe_prep_mode:nn {
     \str_case_e:nn { \languagename }
     {
-        {french}        { + }
-        {italian}       { + }
-        {spanish}       { - }
-        {portuguese}    { + }
-        {brazilian}     { + }
+      {french}        { + }
+      {italian}       { + }
+      {spanish}       { - }
+      {portuguese}    { + }
+      {brazilian}     { + }
     }
 }
 
-\cs_set:Npn \crefthe_contraction:nn #1#2 {
-    \str_if_eq:eeTF {#1} {} {#2} {
+\cs_set:Npn \crefthe_contraction:nn #1#2
+  {
+    \str_if_eq:eeTF {#1} {}
+      {#2}
+      {
         \str_case_e:nn { \languagename }
-        {
-            {french}{
-                \str_case_e:nnF {#1~\text_lowercase:n{#2}} {
+          {
+            {french}
+              {
+                \str_case_e:nnF {#1~\text_lowercase:n{#2}}
+                  {
                     {à~le}      {au}
                     {à~les}     {aux}
                     {de~le}     {du}
@@ -142,10 +180,13 @@
                     {À~les}     {Aux}
                     {De~le}     {Du}
                     {De~les}    {Des}
-                }{#1~\text_lowercase:n{#2}}
-            }
-            {italian}{
-                \str_case_e:nnF {#1~\text_lowercase:n{#2}} {
+                  }
+                  {#1~\text_lowercase:n{#2}}
+              }
+            {italian}
+              {
+                \str_case_e:nnF {#1~\text_lowercase:n{#2}}
+                  {
                     {a~il}      {al}
                     {a~lo}      {allo}
                     {a~l'}      {all'}
@@ -216,10 +257,13 @@
                     {Su~i}      {Sui}
                     {Su~gli}    {Sugli}
                     {Su~le}     {Sulle}
-                }{#1~\text_lowercase:n{#2}}
-            }
-            {portuguese}{
-                \str_case_e:nnF {#1~\text_lowercase:n{#2}} {
+                  }
+                  {#1~\text_lowercase:n{#2}}
+              }
+            {portuguese}
+              {
+                \str_case_e:nnF {#1~\text_lowercase:n{#2}}
+                  {
                     {a~o}       {ao}
                     {a~a}       {à}
                     {a~os}      {aos}
@@ -244,10 +288,13 @@
                     {Em~a}      {Na}
                     {Em~os}     {Nos}
                     {Em~as}     {Nas}
-                }{#1~\text_lowercase:n{#2}}
-            }
-            {brazilian}{
-                \str_case_e:nnF {#1~\text_lowercase:n{#2}} {
+                  }
+                  {#1~\text_lowercase:n{#2}}
+              }
+            {brazilian}
+              {
+                \str_case_e:nnF {#1~\text_lowercase:n{#2}}
+                  {
                     {a~o}       {ao}
                     {a~a}       {à}
                     {a~os}      {aos}
@@ -272,19 +319,23 @@
                     {Em~a}      {Na}
                     {Em~os}     {Nos}
                     {Em~as}     {Nas}
-                }{#1~\text_lowercase:n{#2}}
-            }
-            {spanish}{
-                \str_case_e:nnF {#1~\text_lowercase:n{#2}} {
+                  }
+                  {#1~\text_lowercase:n{#2}}
+              }
+            {spanish}
+              {
+                \str_case_e:nnF {#1~\text_lowercase:n{#2}}
+                  {
                     {a~el}      {al}
                     {de~el}     {del}
                     {A~el}      {Al}
                     {De~el}     {Del}
-                }{#1~\text_lowercase:n{#2}}
-            }
-        }
-    }
-}
+                  }
+                  {#1~\text_lowercase:n{#2}}
+              }
+          }
+      }
+  }
 \endinput
 %%
 %% End of file `crefthe.sty'.
