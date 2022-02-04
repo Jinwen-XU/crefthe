@@ -13,145 +13,148 @@
 \RequirePackage{l3keys2e}
 \ProvidesExplPackage
   {crefthe}
-  {2022/02/02} {}
+  {2022/02/04} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn {crefthe}
   {
-    unknown .code:n =
-      {
-        \PassOptionsToPackage{\CurrentOption}{cleveref}
-      }
+    , overwrite .bool_set:N = \l__crefthe_overwrite_bool
+    , overwrite .initial:n = { false }
+    , unknown .code:n =
+        {
+          \PassOptionsToPackage { \CurrentOption } {cleveref}
+        }
   }
-
 \ProcessKeysOptions{crefthe}
+
 \RequirePackage{cleveref}
 
-\tl_gset:Nn \g_crefthe_prepf_tl {}
-\tl_gset:Nn \g_crefthe_prep_tl {}
-\tl_gset:Nn \g_crefthe_sep_tl {}
-\cs_new:Nn \crefthe_case:n {#1}
-\cs_new:Nn \crefthe_nochange:n {#1}
-\cs_new:Nn \crefthe_atbegindocument:n {#1}
+\cs_set_eq:cc {crefthe_cref_original:n} {cref}
+\cs_set_eq:cc {crefthe_Cref_original:n} {Cref}
+\cs_set_eq:cc {crefthe_crefname_original:n} {crefname}
+\cs_set_eq:cc {crefthe_Crefname_original:n} {Crefname}
 
-\cs_new:Nn \crefthe_set_status_atbegindocument:
+\bool_if:NT \l__crefthe_overwrite_bool
   {
-    \cs_if_eq:NNTF \@onlypreamble \@notprerr
+    \hook_gput_next_code:nn {package/crefthe/after}
       {
-        \cs_gset_eq:NN \crefthe_atbegindocument:n \crefthe_nochange:n
-      }
-      {
-        \cs_gset_eq:NN \crefthe_atbegindocument:n \AtBeginDocument
+        \cs_set_eq:cc {cref} {crefthe}
+        \cs_set_eq:cc {Cref} {Crefthe}
+        \cs_set_eq:cc {crefname} {crefthename}
+        \cs_set_eq:cc {Crefname} {Crefthename}
       }
   }
 
-\NewDocumentCommand{\crefthe}{st-t+O{}m}
+\tl_new:N \g__crefthe_prep_once_tl
+\tl_new:N \g__crefthe_prep_each_tl
+
+\tl_new:N \l__crefthe_prep_mode_tl
+
+\cs_new:Nn \crefthe_case:n { #1 }
+\cs_new:Nn \crefthe_nochange:n { #1 }
+
+\NewDocumentCommand \crefthe { s t- t+ O{} m }
   {
-    \IfBooleanTF{ #2 }
+    \bool_if:nTF { #2 }
       {
-        \tl_gset:Nn \g_crefthe_prepf_tl { #4 }
+        \tl_gset:Nn \g__crefthe_prep_once_tl { #4 }
       }
       {
-        \IfBooleanTF{ #3 }
+        \bool_if:nTF { #3 }
           {
-            \tl_gset:Nn \g_crefthe_prep_tl { #4 }
+            \tl_gset:Nn \g__crefthe_prep_each_tl { #4 }
           }
           {
-            \str_case_e:nn { \crefthe_prep_mode:nn }
+            \exp_args:Nx \str_case:nn \l__crefthe_prep_mode_tl
               {
-                { - } { \tl_gset:Nn \g_crefthe_prepf_tl { #4 } }
-                { + } { \tl_gset:Nn \g_crefthe_prep_tl  { #4 } }
+                { - } { \tl_gset:Nn \g__crefthe_prep_once_tl { #4 } }
+                { + } { \tl_gset:Nn \g__crefthe_prep_each_tl  { #4 } }
               }
           }
       }
-    \IfBooleanTF{ #1 } { \cref*{#5} } { \cref{#5} }
-    \tl_gset:Nn \g_crefthe_prep_tl {}
+    \bool_if:nTF { #1 } { \crefthe_cref_original:n * { #5 } } { \crefthe_cref_original:n { #5 } }
+    \tl_gset:Nn \g__crefthe_prep_each_tl {}
   }
 
-\NewDocumentCommand{\Crefthe}{st-t+O{}m}
+\NewDocumentCommand \Crefthe { s t- t+ O{} m }
   {
-    \cs_gset_eq:NN \crefthe_case:n \text_titlecase:n
-    \IfBooleanTF{ #2 }
+    \cs_gset:Npn \crefthe_case:n ##1 { \text_titlecase:n {##1} }
+    \bool_if:nTF { #2 }
       {
-        \tl_gset:Nn \g_crefthe_prepf_tl { #4 }
+        \tl_gset:Nn \g__crefthe_prep_once_tl { #4 }
       }
       {
-        \IfBooleanTF{ #3 }
+        \bool_if:nTF { #3 }
           {
-            \tl_gset:Nn \g_crefthe_prep_tl { #4 }
+            \tl_gset:Nn \g__crefthe_prep_each_tl { #4 }
           }
           {
-            \str_case_e:nn { \crefthe_prep_mode:nn }
+            \exp_args:Nx \str_case:nn \l__crefthe_prep_mode_tl
               {
-                { - } { \tl_gset:Nn \g_crefthe_prepf_tl { #4 } }
-                { + } { \tl_gset:Nn \g_crefthe_prep_tl  { #4 } }
+                { - } { \tl_gset:Nn \g__crefthe_prep_once_tl { #4 } }
+                { + } { \tl_gset:Nn \g__crefthe_prep_each_tl  { #4 } }
               }
           }
       }
-    \IfBooleanTF{ #1 } { \Cref*{#5} } { \Cref{#5} }
-    \tl_gset:Nn \g_crefthe_prep_tl {}
+    \bool_if:nTF { #1 } { \crefthe_Cref_original:n * { #5 } } { \crefthe_Cref_original:n { #5 } }
+    \tl_gset:Nn \g__crefthe_prep_each_tl {}
   }
 
-\NewDocumentCommand{\crefthename}{mO{}mO{}m}
+\NewDocumentCommand \crefthename { m O{} m O{} m }
   {
-    \str_if_eq:eeTF {#2} {}
+    \tl_if_blank:eTF { #2 }
       {
-        \crefname{#1}{#3}{#5}
-        \cs_set:cn {cref_#1_format:nnn} {##2#3~##1##3}
-        \cs_set:cn {cref_#1_format_first:nnn} {##2#5~##1##3}
+        \crefthe_crefname_original:n { #1 } { #3 } { #5 }
+        \cs_set:cn { cref_#1_format:nnn } { ##2 #3 ~ ##1 ##3 }
+        \cs_set:cn { cref_#1_format_first:nnn } { ##2 #5 ~ ##1 ##3 }
       }
       {
-        \crefname{#1}{\crefthemark{#2} \g_crefthe_sep_tl #3}{\crefthemark{#4} \g_crefthe_sep_tl #5}
-        \cs_set:cn {cref_#1_format:nnn} {\crefthemark{#2} \g_crefthe_sep_tl ##2#3~##1##3}
-        \cs_set:cn {cref_#1_format_first:nnn} {\crefthemark{#4} \g_crefthe_sep_tl ##2#5~##1##3}
+        \crefthe_crefname_original:n { #1 } { \crefthemark{ #2 } #3 } { \crefthemark{ #4 } #5 }
+        \cs_set:cn { cref_#1_format:nnn } { \crefthemark { #2 } ##2 #3 ~ ##1 ##3 }
+        \cs_set:cn { cref_#1_format_first:nnn } { \crefthemark { #4 } ##2 #5 ~ ##1 ##3 }
       }
-    \crefthe_set_status_atbegindocument:
-    \crefthe_atbegindocument:n
+    \hook_gput_next_code:nn { begindocument }
       {
-        \cs_set_eq:cc {cref@#1@format} {cref_#1_format:nnn}
-        \cs_set_eq:cc {cref@#1@format@first} {cref_#1_format_first:nnn}
+        \cs_set_eq:cc { cref@ #1 @format } { cref_#1_format:nnn }
+        \cs_set_eq:cc { cref@ #1 @format@first } { cref_#1_format_first:nnn }
       }
   }
 
-\NewDocumentCommand{\Crefthename}{mO{}mO{}m}
+\NewDocumentCommand \Crefthename { m O{} m O{} m }
   {
-    \str_if_eq:eeTF {#2} {}
+    \tl_if_blank:eTF { #2 }
       {
-        \Crefname{#1}{#3}{#5}
-        \cs_set:cn {Cref_#1_format:nnn} {##2#3~##1##3}
-        \cs_set:cn {Cref_#1_format_first:nnn} {##2#5~##1##3}
+        \crefthe_Crefname_original:n { #1 } { #3 } { #5 }
+        \cs_set:cn { Cref_#1_format:nnn } { ##2 #3 ~ ##1 ##3 }
+        \cs_set:cn { Cref_#1_format_first:nnn } { ##2 #5 ~ ##1 ##3 }
       }
       {
-        \Crefname{#1}{\crefthemark{#2} \g_crefthe_sep_tl #3}{\crefthemark{#4} \g_crefthe_sep_tl #5}
-        \cs_set:cn {Cref_#1_format:nnn} {\crefthemark{#2} \g_crefthe_sep_tl ##2#3~##1##3}
-        \cs_set:cn {Cref_#1_format_first:nnn} {\crefthemark{#4} \g_crefthe_sep_tl ##2#5~##1##3}
+        \crefthe_Crefname_original:n { #1 } { \crefthemark{ #2 } #3 }{ \crefthemark{ #4 } #5 }
+        \cs_set:cn { Cref_#1_format:nnn } { \crefthemark { #2 } ##2 #3 ~ ##1 ##3 }
+        \cs_set:cn { Cref_#1_format_first:nnn } { \crefthemark { #4 } ##2 #5 ~ ##1 ##3 }
       }
-    \crefthe_set_status_atbegindocument:
-    \crefthe_atbegindocument:n
+    \hook_gput_next_code:nn { begindocument }
       {
-        \cs_set_eq:cc {Cref@#1@format} {Cref_#1_format:nnn}
-        \cs_set_eq:cc {Cref@#1@format@first} {Cref_#1_format_first:nnn}
+        \cs_set_eq:cc { Cref@ #1 @format } { Cref_#1_format:nnn }
+        \cs_set_eq:cc { Cref@ #1 @format@first } { Cref_#1_format_first:nnn }
       }
   }
 
-\NewDocumentCommand{\crefthemark}{m}{
-    \crefthe_contraction:nn { \crefthe_case:n \g_crefthe_prep_tl }
+\NewDocumentCommand \crefthemark { m }
+  {
+    \crefthe_contraction:nn { \crefthe_case:n \g__crefthe_prep_each_tl }
       {
-        \crefthe_contraction:nn { \crefthe_case:n \g_crefthe_prepf_tl }{#1}
+        \crefthe_contraction:nn { \crefthe_case:n \g__crefthe_prep_once_tl } { #1 }
       }
-    \tl_gset:Nn \g_crefthe_prepf_tl {}
-    \tl_gset:Nx \g_crefthe_prep_tl { \text_lowercase:n \g_crefthe_prep_tl }
-    \str_case_e:nnF {\str_tail:n {#1}}
-      {
-        {'} { \tl_gset:Nn \g_crefthe_sep_tl {} }
-      }
-      { \tl_gset:Nn \g_crefthe_sep_tl {~} }
-    \cs_gset_eq:NN \crefthe_case:n \crefthe_nochange:n
-    % \cs_gset_eq:NN \crefthe_case:n \text_lowercase:n
-}
+    \tl_gset:Nn \g__crefthe_prep_once_tl {}
+    \tl_gset:Nx \g__crefthe_prep_each_tl { \text_lowercase:n \g__crefthe_prep_each_tl }
+    \str_if_eq:eeF { \str_tail:n { #1 } } { ' } { ~ }
+    \cs_gset:Npn \crefthe_case:n ##1 { \crefthe_nochange:n {##1} }
+    % \cs_gset:Npn \crefthe_case:n ##1 { \text_lowercase:n {##1} }
+  }
 
-\cs_set:Npn \crefthe_prep_mode:nn {
-    \str_case_e:nn { \languagename }
+\tl_set:Nn \l__crefthe_prep_mode_tl {
+  \str_case_e:nn { \languagename }
     {
       {french}        { + }
       {italian}       { + }
@@ -161,181 +164,173 @@
     }
 }
 
-\cs_set:Npn \crefthe_contraction:nn #1#2
+\cs_new:Npn \crefthe_contraction:nn #1#2
   {
-    \str_if_eq:eeTF {#1} {}
-      {#2}
+    \tl_if_blank:eTF { #1 }
+      { #2 }
       {
-        \str_case_e:nn { \languagename }
+        \tl_if_exist:cTF { crefthe_contraction_rule_ \languagename _tl }
           {
-            {french}
+            \exp_args:Nnx \str_case_e:nnF { #1~\text_lowercase:n{ #2 } }
               {
-                \str_case_e:nnF {#1~\text_lowercase:n{#2}}
-                  {
-                    {à~le}      {au}
-                    {à~les}     {aux}
-                    {de~le}     {du}
-                    {de~les}    {des}
-                    {À~le}      {Au}
-                    {À~les}     {Aux}
-                    {De~le}     {Du}
-                    {De~les}    {Des}
-                  }
-                  {#1~\text_lowercase:n{#2}}
+                \tl_use:c { crefthe_contraction_rule_ \languagename _tl }
               }
-            {italian}
-              {
-                \str_case_e:nnF {#1~\text_lowercase:n{#2}}
-                  {
-                    {a~il}      {al}
-                    {a~lo}      {allo}
-                    {a~l'}      {all'}
-                    {a~la}      {alla}
-                    {di~il}     {del}
-                    {di~lo}     {dello}
-                    {di~l'}     {dell'}
-                    {di~la}     {della}
-                    {da~il}     {dal}
-                    {da~lo}     {dallo}
-                    {da~l'}     {dall'}
-                    {da~la}     {dalla}
-                    {in~il}     {nel}
-                    {in~lo}     {nello}
-                    {in~l'}     {nell'}
-                    {in~la}     {nella}
-                    {su~il}     {sul}
-                    {su~lo}     {sullo}
-                    {su~l'}     {sull'}
-                    {su~la}     {sulla}
-                    {a~i}       {ai}
-                    {a~gli}     {agli}
-                    {a~le}      {alle}
-                    {di~i}      {dei}
-                    {di~gli}    {degli}
-                    {di~le}     {delle}
-                    {da~i}      {dai}
-                    {da~gli}    {dagli}
-                    {da~le}     {dalle}
-                    {in~i}      {nei}
-                    {in~gli}    {negli}
-                    {in~le}     {nelle}
-                    {su~i}      {sui}
-                    {su~gli}    {sugli}
-                    {su~le}     {sulle}
-                    {A~il}      {Al}
-                    {A~lo}      {Allo}
-                    {A~l'}      {All'}
-                    {A~la}      {Alla}
-                    {Di~il}     {Del}
-                    {Di~lo}     {Dello}
-                    {Di~l'}     {Dell'}
-                    {Di~la}     {Della}
-                    {Da~il}     {Dal}
-                    {Da~lo}     {Dallo}
-                    {Da~l'}     {Dall'}
-                    {Da~la}     {Dalla}
-                    {In~il}     {Nel}
-                    {In~lo}     {Nello}
-                    {In~l'}     {Nell'}
-                    {In~la}     {Nella}
-                    {Su~il}     {Sul}
-                    {Su~lo}     {Sullo}
-                    {Su~l'}     {Sull'}
-                    {Su~la}     {Sulla}
-                    {A~i}       {Ai}
-                    {A~gli}     {Agli}
-                    {A~le}      {Alle}
-                    {Di~i}      {Dei}
-                    {Di~gli}    {Degli}
-                    {Di~le}     {Delle}
-                    {Da~i}      {Dai}
-                    {Da~gli}    {Dagli}
-                    {Da~le}     {Dalle}
-                    {In~i}      {Nei}
-                    {In~gli}    {Negli}
-                    {In~le}     {Nelle}
-                    {Su~i}      {Sui}
-                    {Su~gli}    {Sugli}
-                    {Su~le}     {Sulle}
-                  }
-                  {#1~\text_lowercase:n{#2}}
-              }
-            {portuguese}
-              {
-                \str_case_e:nnF {#1~\text_lowercase:n{#2}}
-                  {
-                    {a~o}       {ao}
-                    {a~a}       {à}
-                    {a~os}      {aos}
-                    {a~as}      {às}
-                    {de~o}      {do}
-                    {de~a}      {da}
-                    {de~os}     {dos}
-                    {de~as}     {das}
-                    {em~o}      {no}
-                    {em~a}      {na}
-                    {em~os}     {nos}
-                    {em~as}     {nas}
-                    {A~o}       {Ao}
-                    {A~a}       {À}
-                    {A~os}      {Aos}
-                    {A~as}      {Às}
-                    {De~o}      {Do}
-                    {De~a}      {Da}
-                    {De~os}     {Dos}
-                    {De~as}     {Das}
-                    {Em~o}      {No}
-                    {Em~a}      {Na}
-                    {Em~os}     {Nos}
-                    {Em~as}     {Nas}
-                  }
-                  {#1~\text_lowercase:n{#2}}
-              }
-            {brazilian}
-              {
-                \str_case_e:nnF {#1~\text_lowercase:n{#2}}
-                  {
-                    {a~o}       {ao}
-                    {a~a}       {à}
-                    {a~os}      {aos}
-                    {a~as}      {às}
-                    {de~o}      {do}
-                    {de~a}      {da}
-                    {de~os}     {dos}
-                    {de~as}     {das}
-                    {em~o}      {no}
-                    {em~a}      {na}
-                    {em~os}     {nos}
-                    {em~as}     {nas}
-                    {A~o}       {Ao}
-                    {A~a}       {À}
-                    {A~os}      {Aos}
-                    {A~as}      {Às}
-                    {De~o}      {Do}
-                    {De~a}      {Da}
-                    {De~os}     {Dos}
-                    {De~as}     {Das}
-                    {Em~o}      {No}
-                    {Em~a}      {Na}
-                    {Em~os}     {Nos}
-                    {Em~as}     {Nas}
-                  }
-                  {#1~\text_lowercase:n{#2}}
-              }
-            {spanish}
-              {
-                \str_case_e:nnF {#1~\text_lowercase:n{#2}}
-                  {
-                    {a~el}      {al}
-                    {de~el}     {del}
-                    {A~el}      {Al}
-                    {De~el}     {Del}
-                  }
-                  {#1~\text_lowercase:n{#2}}
-              }
+              { #1~\text_lowercase:n{ #2 } }
           }
+          { #1 ~ #2 }
       }
   }
+
+\tl_gset:Nn \crefthe_contraction_rule_french_tl
+  {
+    { à~le }      { au }
+    { à~les }     { aux }
+    { de~le }     { du }
+    { de~les }    { des }
+    { À~le }      { Au }
+    { À~les }     { Aux }
+    { De~le }     { Du }
+    { De~les }    { Des }
+  }
+
+\tl_gset:Nn \crefthe_contraction_rule_italian_tl
+  {
+    { a~il }      { al }
+    { a~lo }      { allo }
+    { a~l' }      { all' }
+    { a~la }      { alla }
+    { di~il }     { del }
+    { di~lo }     { dello }
+    { di~l' }     { dell' }
+    { di~la }     { della }
+    { da~il }     { dal }
+    { da~lo }     { dallo }
+    { da~l' }     { dall' }
+    { da~la }     { dalla }
+    { in~il }     { nel }
+    { in~lo }     { nello }
+    { in~l' }     { nell' }
+    { in~la }     { nella }
+    { su~il }     { sul }
+    { su~lo }     { sullo }
+    { su~l' }     { sull' }
+    { su~la }     { sulla }
+    { a~i }       { ai }
+    { a~gli }     { agli }
+    { a~le }      { alle }
+    { di~i }      { dei }
+    { di~gli }    { degli }
+    { di~le }     { delle }
+    { da~i }      { dai }
+    { da~gli }    { dagli }
+    { da~le }     { dalle }
+    { in~i }      { nei }
+    { in~gli }    { negli }
+    { in~le }     { nelle }
+    { su~i }      { sui }
+    { su~gli }    { sugli }
+    { su~le }     { sulle }
+    { A~il }      { Al }
+    { A~lo }      { Allo }
+    { A~l' }      { All' }
+    { A~la }      { Alla }
+    { Di~il }     { Del }
+    { Di~lo }     { Dello }
+    { Di~l' }     { Dell' }
+    { Di~la }     { Della }
+    { Da~il }     { Dal }
+    { Da~lo }     { Dallo }
+    { Da~l' }     { Dall' }
+    { Da~la }     { Dalla }
+    { In~il }     { Nel }
+    { In~lo }     { Nello }
+    { In~l' }     { Nell' }
+    { In~la }     { Nella }
+    { Su~il }     { Sul }
+    { Su~lo }     { Sullo }
+    { Su~l' }     { Sull' }
+    { Su~la }     { Sulla }
+    { A~i }       { Ai }
+    { A~gli }     { Agli }
+    { A~le }      { Alle }
+    { Di~i }      { Dei }
+    { Di~gli }    { Degli }
+    { Di~le }     { Delle }
+    { Da~i }      { Dai }
+    { Da~gli }    { Dagli }
+    { Da~le }     { Dalle }
+    { In~i }      { Nei }
+    { In~gli }    { Negli }
+    { In~le }     { Nelle }
+    { Su~i }      { Sui }
+    { Su~gli }    { Sugli }
+    { Su~le }     { Sulle }
+  }
+
+\tl_gset:Nn \crefthe_contraction_rule_spanish_tl
+  {
+    { a~el }      { al }
+    { de~el }     { del }
+    { A~el }      { Al }
+    { De~el }     { Del }
+  }
+
+\tl_gset:Nn \crefthe_contraction_rule_portuguese_tl
+  {
+    { a~o }       { ao }
+    { a~a }       { à }
+    { a~os }      { aos }
+    { a~as }      { às }
+    { de~o }      { do }
+    { de~a }      { da }
+    { de~os }     { dos }
+    { de~as }     { das }
+    { em~o }      { no }
+    { em~a }      { na }
+    { em~os }     { nos }
+    { em~as }     { nas }
+    { A~o }       { Ao }
+    { A~a }       { À }
+    { A~os }      { Aos }
+    { A~as }      { Às }
+    { De~o }      { Do }
+    { De~a }      { Da }
+    { De~os }     { Dos }
+    { De~as }     { Das }
+    { Em~o }      { No }
+    { Em~a }      { Na }
+    { Em~os }     { Nos }
+    { Em~as }     { Nas }
+  }
+
+\tl_gset:Nn \crefthe_contraction_rule_brazilian_tl
+  {
+    { a~o }       { ao }
+    { a~a }       { à }
+    { a~os }      { aos }
+    { a~as }      { às }
+    { de~o }      { do }
+    { de~a }      { da }
+    { de~os }     { dos }
+    { de~as }     { das }
+    { em~o }      { no }
+    { em~a }      { na }
+    { em~os }     { nos }
+    { em~as }     { nas }
+    { A~o }       { Ao }
+    { A~a }       { À }
+    { A~os }      { Aos }
+    { A~as }      { Às }
+    { De~o }      { Do }
+    { De~a }      { Da }
+    { De~os }     { Dos }
+    { De~as }     { Das }
+    { Em~o }      { No }
+    { Em~a }      { Na }
+    { Em~os }     { Nos }
+    { Em~as }     { Nas }
+  }
+
 \endinput
 %%
 %% End of file `crefthe.sty'.
