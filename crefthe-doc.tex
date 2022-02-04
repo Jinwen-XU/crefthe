@@ -89,8 +89,8 @@
 
 \title{\crefthepackage{} - cross referencing with proper definite articles}
 \author{Jinwen XU}
-\thanks{Corresponding to: \texttt{\crefthepackage{} 2022/01/29}}
-\date{January 2022, in Paris}
+\thanks{Corresponding to: \texttt{\crefthepackage{} 2022/02/04}}
+\date{February 2022, in Paris}
 
 \maketitle
 
@@ -226,15 +226,17 @@ Of course you will have to define the \lstinline|\Crefthename|s separately, for 
 
 \crefthepackage{} loads \textsf{cleveref} automatically and pass all the options to it. All its commands, used without optional arguments, degenerate to those in \textsf{cleveref}. For example, \lstinline|\crefthe{...}| is the same as \lstinline|\cref{...}|, and \lstinline|\crefthename| is the same as \lstinline|\crefname| if the definite articles are not specified. That said, you can safely use the command \lstinline|\crefthe| everywhere in your document without causing extra trouble.
 
+With the option \texttt{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| -- and similarly for \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|.
+
 \section{For multi-language documents}
 
-To place hyperlinks at the right place, \lstinline|\crefthename| touches the corresponding \lstinline|\crefformat| internally, which makes it language-dependent. If you are writing multi-language documents, you may like to consider putting \lstinline|\crefthename| inside your language configuration so as to reset it each time you select a new language.
+To place hyperlinks at the right place, \lstinline|\crefthename| touches the corresponding \lstinline|\crefformat| internally, which makes the format language-dependent. If you are writing multi-language documents, you may consider putting \lstinline|\crefthename| inside your language configuration so as to reset it each time you select a new language.
 
 \section{Known issues}
 \begin{itemize}
-    \item \crefthepackage{} currently only works for French, Italian, Portuguese (European and Brazilian) and Spanish, certainly more would be added to this list.
-    \item The current mechanism does not work for German. However, the author has planed to adopt a more refined approach in later versions in order to support the various situations in German.
-    \item For now, the automatic case changing mechanism only works properly under Unicode based engines. If you are using pdf\LaTeX{} or typing accented letters with text commands, \lstinline|\Crefthe| will not work as expected.
+    \item \crefthepackage{} currently works for French, Italian, Portuguese (European and Brazilian) and Spanish, certainly more would be added to this list.
+    \item The current mechanism does not work for German. The author plans to adopt a more refined approach in later versions in order to support the various situations in German.
+    \item For now, the automatic case changing mechanism only works properly under Unicode based engines. If you are using pdf\LaTeX{} or typing accented letters with text commands, \lstinline|\Crefthe| may not work as expected.
     % \item In case that the initial letter of \meta{prep} is capitalized, \crefthepackage{} cannot yet handle the case changes automatically. However, this should be a rare occurrence.
     \item The names of theorem-like environments are not provided --- for the moment you need to define them all by yourself. However, users are encouraged to use the \ProjLib{} toolkit, which already handles everything for you.
 \end{itemize}
