@@ -13,35 +13,35 @@
 \RequirePackage{l3keys2e}
 \ProvidesExplPackage
   {crefthe}
-  {2022/02/04} {}
+  {2022/02/05} {}
   {Cross referencing with proper definite articles}
 
-\keys_define:nn {crefthe}
+\keys_define:nn { crefthe }
   {
     , overwrite .bool_set:N = \l__crefthe_overwrite_bool
-    , overwrite .initial:n = { false }
-    , unknown .code:n =
+    , overwrite .initial:n  = { false }
+    , unknown .code:n       =
         {
-          \PassOptionsToPackage { \CurrentOption } {cleveref}
+          \PassOptionsToPackage { \CurrentOption } { cleveref }
         }
   }
-\ProcessKeysOptions{crefthe}
+\ProcessKeysOptions { crefthe }
 
-\RequirePackage{cleveref}
+\RequirePackage { cleveref }
 
-\cs_set_eq:cc {crefthe_cref_original:n} {cref}
-\cs_set_eq:cc {crefthe_Cref_original:n} {Cref}
-\cs_set_eq:cc {crefthe_crefname_original:n} {crefname}
-\cs_set_eq:cc {crefthe_Crefname_original:n} {Crefname}
+\cs_set_eq:cc { crefthe_cref_original:n }     { cref }
+\cs_set_eq:cc { crefthe_Cref_original:n }     { Cref }
+\cs_set_eq:cc { crefthe_crefname_original:n } { crefname }
+\cs_set_eq:cc { crefthe_Crefname_original:n } { Crefname }
 
 \bool_if:NT \l__crefthe_overwrite_bool
   {
-    \hook_gput_next_code:nn {package/crefthe/after}
+    \hook_gput_next_code:nn { package/crefthe/after }
       {
-        \cs_set_eq:cc {cref} {crefthe}
-        \cs_set_eq:cc {Cref} {Crefthe}
-        \cs_set_eq:cc {crefname} {crefthename}
-        \cs_set_eq:cc {Crefname} {Crefthename}
+        \cs_set_eq:cc { cref }     { crefthe }
+        \cs_set_eq:cc { Cref }     { Crefthe }
+        \cs_set_eq:cc { crefname } { crefthename }
+        \cs_set_eq:cc { Crefname } { Crefthename }
       }
   }
 
