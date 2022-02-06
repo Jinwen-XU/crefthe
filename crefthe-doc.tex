@@ -89,7 +89,7 @@
 
 \title{\crefthepackage{} - cross referencing with proper definite articles}
 \author{Jinwen XU}
-\thanks{Corresponding to: \texttt{\crefthepackage{} 2022/02/04}}
+\thanks{Corresponding to: \texttt{\crefthepackage{} 2022/02/06}}
 \date{February 2022, in Paris}
 
 \maketitle
@@ -236,8 +236,6 @@ To place hyperlinks at the right place, \lstinline|\crefthename| touches the cor
 \begin{itemize}
     \item \crefthepackage{} currently works for French, Italian, Portuguese (European and Brazilian) and Spanish, certainly more would be added to this list.
     \item The current mechanism does not work for German. The author plans to adopt a more refined approach in later versions in order to support the various situations in German.
-    \item For now, the automatic case changing mechanism only works properly under Unicode based engines. If you are using pdf\LaTeX{} or typing accented letters with text commands, \lstinline|\Crefthe| may not work as expected.
-    % \item In case that the initial letter of \meta{prep} is capitalized, \crefthepackage{} cannot yet handle the case changes automatically. However, this should be a rare occurrence.
     \item The names of theorem-like environments are not provided --- for the moment you need to define them all by yourself. However, users are encouraged to use the \ProjLib{} toolkit, which already handles everything for you.
 \end{itemize}
 

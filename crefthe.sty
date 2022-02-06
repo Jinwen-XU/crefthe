@@ -13,7 +13,7 @@
 \RequirePackage{l3keys2e}
 \ProvidesExplPackage
   {crefthe}
-  {2022/02/05} {}
+  {2022/02/06} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -50,11 +50,11 @@
 
 \tl_new:N \l__crefthe_prep_mode_tl
 
-\cs_new:Nn \crefthe_case:n { #1 }
-\cs_new:Nn \crefthe_nochange:n { #1 }
+\bool_new:N \g__crefthe_uppercase_bool
 
 \NewDocumentCommand \crefthe { s t- t+ O{} m }
   {
+    \bool_set_false:N \g__crefthe_uppercase_bool
     \bool_if:nTF { #2 }
       {
         \tl_gset:Nn \g__crefthe_prep_once_tl { #4 }
@@ -78,7 +78,7 @@
 
 \NewDocumentCommand \Crefthe { s t- t+ O{} m }
   {
-    \cs_gset:Npn \crefthe_case:n ##1 { \text_titlecase:n {##1} }
+    \bool_set_true:N \g__crefthe_uppercase_bool
     \bool_if:nTF { #2 }
       {
         \tl_gset:Nn \g__crefthe_prep_once_tl { #4 }
@@ -142,15 +142,14 @@
 
 \NewDocumentCommand \crefthemark { m }
   {
-    \crefthe_contraction:nn { \crefthe_case:n \g__crefthe_prep_each_tl }
+    \crefthe_contraction:nn { \g__crefthe_prep_each_tl }
       {
-        \crefthe_contraction:nn { \crefthe_case:n \g__crefthe_prep_once_tl } { #1 }
+        \crefthe_contraction:nn { \g__crefthe_prep_once_tl } { #1 }
       }
     \tl_gset:Nn \g__crefthe_prep_once_tl {}
     \tl_gset:Nx \g__crefthe_prep_each_tl { \text_lowercase:n \g__crefthe_prep_each_tl }
     \str_if_eq:eeF { \str_tail:n { #1 } } { ' } { ~ }
-    \cs_gset:Npn \crefthe_case:n ##1 { \crefthe_nochange:n {##1} }
-    % \cs_gset:Npn \crefthe_case:n ##1 { \text_lowercase:n {##1} }
+    \bool_set_false:N \g__crefthe_uppercase_bool
   }
 
 \tl_set:Nn \l__crefthe_prep_mode_tl {
@@ -171,11 +170,21 @@
       {
         \tl_if_exist:cTF { crefthe_contraction_rule_ \languagename _tl }
           {
-            \exp_args:Nnx \str_case_e:nnF { #1~\text_lowercase:n{ #2 } }
+            \bool_if:NTF \g__crefthe_uppercase_bool
               {
-                \tl_use:c { crefthe_contraction_rule_ \languagename _tl }
+                \exp_args:Nnx \str_case_e:nnF { #1 ~ \text_lowercase:n{ #2 } }
+                {
+                  \tl_use:c { crefthe_contraction_rule_uppercase_ \languagename _tl }
+                }
+                { #1 ~ \text_lowercase:n{ #2 } }
               }
-              { #1~\text_lowercase:n{ #2 } }
+              {
+                \exp_args:Nnx \str_case_e:nnF { #1 ~ \text_lowercase:n{ #2 } }
+                {
+                  \tl_use:c { crefthe_contraction_rule_ \languagename _tl }
+                }
+                { #1 ~ \text_lowercase:n{ #2 } }
+              }
           }
           { #1 ~ #2 }
       }
@@ -187,6 +196,17 @@
     { à~les }     { aux }
     { de~le }     { du }
     { de~les }    { des }
+    { À~le }      { Au }
+    { À~les }     { Aux }
+    { De~le }     { Du }
+    { De~les }    { Des }
+  }
+\tl_gset:Nn \crefthe_contraction_rule_uppercase_french_tl
+  {
+    { à~le }      { Au }
+    { à~les }     { Aux }
+    { de~le }     { Du }
+    { de~les }    { Des }
     { À~le }      { Au }
     { À~les }     { Aux }
     { De~le }     { Du }
@@ -266,11 +286,91 @@
     { Su~gli }    { Sugli }
     { Su~le }     { Sulle }
   }
+\tl_gset:Nn \crefthe_contraction_rule_uppercase_italian_tl
+  {
+    { a~il }      { Al }
+    { a~lo }      { Allo }
+    { a~l' }      { All' }
+    { a~la }      { Alla }
+    { di~il }     { Del }
+    { di~lo }     { Dello }
+    { di~l' }     { Dell' }
+    { di~la }     { Della }
+    { da~il }     { Dal }
+    { da~lo }     { Dallo }
+    { da~l' }     { Dall' }
+    { da~la }     { Dalla }
+    { in~il }     { Nel }
+    { in~lo }     { Nello }
+    { in~l' }     { Nell' }
+    { in~la }     { Nella }
+    { su~il }     { Sul }
+    { su~lo }     { Sullo }
+    { su~l' }     { Sull' }
+    { su~la }     { Sulla }
+    { a~i }       { Ai }
+    { a~gli }     { Agli }
+    { a~le }      { Alle }
+    { di~i }      { Dei }
+    { di~gli }    { Degli }
+    { di~le }     { Delle }
+    { da~i }      { Dai }
+    { da~gli }    { Dagli }
+    { da~le }     { Dalle }
+    { in~i }      { Nei }
+    { in~gli }    { Negli }
+    { in~le }     { Nelle }
+    { su~i }      { Sui }
+    { su~gli }    { Sugli }
+    { su~le }     { Sulle }
+    { A~il }      { Al }
+    { A~lo }      { Allo }
+    { A~l' }      { All' }
+    { A~la }      { Alla }
+    { Di~il }     { Del }
+    { Di~lo }     { Dello }
+    { Di~l' }     { Dell' }
+    { Di~la }     { Della }
+    { Da~il }     { Dal }
+    { Da~lo }     { Dallo }
+    { Da~l' }     { Dall' }
+    { Da~la }     { Dalla }
+    { In~il }     { Nel }
+    { In~lo }     { Nello }
+    { In~l' }     { Nell' }
+    { In~la }     { Nella }
+    { Su~il }     { Sul }
+    { Su~lo }     { Sullo }
+    { Su~l' }     { Sull' }
+    { Su~la }     { Sulla }
+    { A~i }       { Ai }
+    { A~gli }     { Agli }
+    { A~le }      { Alle }
+    { Di~i }      { Dei }
+    { Di~gli }    { Degli }
+    { Di~le }     { Delle }
+    { Da~i }      { Dai }
+    { Da~gli }    { Dagli }
+    { Da~le }     { Dalle }
+    { In~i }      { Nei }
+    { In~gli }    { Negli }
+    { In~le }     { Nelle }
+    { Su~i }      { Sui }
+    { Su~gli }    { Sugli }
+    { Su~le }     { Sulle }
+  }
 
 \tl_gset:Nn \crefthe_contraction_rule_spanish_tl
   {
     { a~el }      { al }
     { de~el }     { del }
+    { A~el }      { Al }
+    { De~el }     { Del }
+  }
+\tl_gset:Nn \crefthe_contraction_rule_uppercase_spanish_tl
+  {
+    { a~el }      { Al }
+    { de~el }     { Del }
     { A~el }      { Al }
     { De~el }     { Del }
   }
@@ -289,6 +389,33 @@
     { em~a }      { na }
     { em~os }     { nos }
     { em~as }     { nas }
+    { A~o }       { Ao }
+    { A~a }       { À }
+    { A~os }      { Aos }
+    { A~as }      { Às }
+    { De~o }      { Do }
+    { De~a }      { Da }
+    { De~os }     { Dos }
+    { De~as }     { Das }
+    { Em~o }      { No }
+    { Em~a }      { Na }
+    { Em~os }     { Nos }
+    { Em~as }     { Nas }
+  }
+\tl_gset:Nn \crefthe_contraction_rule_uppercase_portuguese_tl
+  {
+    { a~o }       { Ao }
+    { a~a }       { À }
+    { a~os }      { Aos }
+    { a~as }      { Às }
+    { de~o }      { Do }
+    { de~a }      { Da }
+    { de~os }     { Dos }
+    { de~as }     { Das }
+    { em~o }      { No }
+    { em~a }      { Na }
+    { em~os }     { Nos }
+    { em~as }     { Nas }
     { A~o }       { Ao }
     { A~a }       { À }
     { A~os }      { Aos }
@@ -330,7 +457,33 @@
     { Em~os }     { Nos }
     { Em~as }     { Nas }
   }
-
+\tl_gset:Nn \crefthe_contraction_rule_uppercase_brazilian_tl
+  {
+    { a~o }       { Ao }
+    { a~a }       { À }
+    { a~os }      { Aos }
+    { a~as }      { Às }
+    { de~o }      { Do }
+    { de~a }      { Da }
+    { de~os }     { Dos }
+    { de~as }     { Das }
+    { em~o }      { No }
+    { em~a }      { Na }
+    { em~os }     { Nos }
+    { em~as }     { Nas }
+    { A~o }       { Ao }
+    { A~a }       { À }
+    { A~os }      { Aos }
+    { A~as }      { Às }
+    { De~o }      { Do }
+    { De~a }      { Da }
+    { De~os }     { Dos }
+    { De~as }     { Das }
+    { Em~o }      { No }
+    { Em~a }      { Na }
+    { Em~os }     { Nos }
+    { Em~as }     { Nas }
+  }
 \endinput
 %%
 %% End of file `crefthe.sty'.
