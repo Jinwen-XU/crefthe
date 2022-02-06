@@ -113,7 +113,7 @@
         \cs_set:cn { cref_#1_format:nnn } { \crefthemark { #2 } ##2 #3 ~ ##1 ##3 }
         \cs_set:cn { cref_#1_format_first:nnn } { \crefthemark { #4 } ##2 #5 ~ ##1 ##3 }
       }
-    \hook_gput_next_code:nn { begindocument }
+    \AddToHook { begindocument }
       {
         \cs_set_eq:cc { cref@ #1 @format } { cref_#1_format:nnn }
         \cs_set_eq:cc { cref@ #1 @format@first } { cref_#1_format_first:nnn }
@@ -133,7 +133,7 @@
         \cs_set:cn { Cref_#1_format:nnn } { \crefthemark { #2 } ##2 #3 ~ ##1 ##3 }
         \cs_set:cn { Cref_#1_format_first:nnn } { \crefthemark { #4 } ##2 #5 ~ ##1 ##3 }
       }
-    \hook_gput_next_code:nn { begindocument }
+    \AddToHook { begindocument }
       {
         \cs_set_eq:cc { Cref@ #1 @format } { Cref_#1_format:nnn }
         \cs_set_eq:cc { Cref@ #1 @format@first } { Cref_#1_format_first:nnn }
