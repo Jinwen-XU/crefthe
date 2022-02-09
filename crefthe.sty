@@ -13,7 +13,7 @@
 \RequirePackage{l3keys2e}
 \ProvidesExplPackage
   {crefthe}
-  {2022/02/06} {}
+  {2022/02/09} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -152,6 +152,8 @@
     \bool_set_false:N \g__crefthe_uppercase_bool
   }
 
+\prg_generate_conditional_variant:Nnn \str_case_e:nn { nv } { p, T, F, TF }
+
 \tl_set:Nn \l__crefthe_prep_mode_tl {
   \str_case_e:nn { \languagename }
     {
@@ -168,29 +170,25 @@
     \tl_if_blank:eTF { #1 }
       { #2 }
       {
-        \tl_if_exist:cTF { crefthe_contraction_rule_ \languagename _tl }
+        \tl_if_exist:cTF { g_crefthe_contraction_rule_ \languagename _tl }
           {
             \bool_if:NTF \g__crefthe_uppercase_bool
               {
-                \exp_args:Nnx \str_case_e:nnF { #1 ~ \text_lowercase:n{ #2 } }
-                {
-                  \tl_use:c { crefthe_contraction_rule_uppercase_ \languagename _tl }
-                }
-                { #1 ~ \text_lowercase:n{ #2 } }
+                \str_case_e:nvF { #1 ~ \text_lowercase:n { #2 } }
+                { g_crefthe_contraction_rule_uppercase_ \languagename _tl }
+                { #1 ~ \text_lowercase:n { #2 } }
               }
               {
-                \exp_args:Nnx \str_case_e:nnF { #1 ~ \text_lowercase:n{ #2 } }
-                {
-                  \tl_use:c { crefthe_contraction_rule_ \languagename _tl }
-                }
-                { #1 ~ \text_lowercase:n{ #2 } }
+                \str_case_e:nvF { #1 ~ \text_lowercase:n { #2 } }
+                { g_crefthe_contraction_rule_ \languagename _tl }
+                { #1 ~ \text_lowercase:n { #2 } }
               }
           }
           { #1 ~ #2 }
       }
   }
 
-\tl_gset:Nn \crefthe_contraction_rule_french_tl
+\tl_gset:Nn \g_crefthe_contraction_rule_french_tl
   {
     { à~le }      { au }
     { à~les }     { aux }
@@ -201,7 +199,7 @@
     { De~le }     { Du }
     { De~les }    { Des }
   }
-\tl_gset:Nn \crefthe_contraction_rule_uppercase_french_tl
+\tl_gset:Nn \g_crefthe_contraction_rule_uppercase_french_tl
   {
     { à~le }      { Au }
     { à~les }     { Aux }
@@ -213,7 +211,7 @@
     { De~les }    { Des }
   }
 
-\tl_gset:Nn \crefthe_contraction_rule_italian_tl
+\tl_gset:Nn \g_crefthe_contraction_rule_italian_tl
   {
     { a~il }      { al }
     { a~lo }      { allo }
@@ -286,7 +284,7 @@
     { Su~gli }    { Sugli }
     { Su~le }     { Sulle }
   }
-\tl_gset:Nn \crefthe_contraction_rule_uppercase_italian_tl
+\tl_gset:Nn \g_crefthe_contraction_rule_uppercase_italian_tl
   {
     { a~il }      { Al }
     { a~lo }      { Allo }
@@ -360,14 +358,14 @@
     { Su~le }     { Sulle }
   }
 
-\tl_gset:Nn \crefthe_contraction_rule_spanish_tl
+\tl_gset:Nn \g_crefthe_contraction_rule_spanish_tl
   {
     { a~el }      { al }
     { de~el }     { del }
     { A~el }      { Al }
     { De~el }     { Del }
   }
-\tl_gset:Nn \crefthe_contraction_rule_uppercase_spanish_tl
+\tl_gset:Nn \g_crefthe_contraction_rule_uppercase_spanish_tl
   {
     { a~el }      { Al }
     { de~el }     { Del }
@@ -375,7 +373,7 @@
     { De~el }     { Del }
   }
 
-\tl_gset:Nn \crefthe_contraction_rule_portuguese_tl
+\tl_gset:Nn \g_crefthe_contraction_rule_portuguese_tl
   {
     { a~o }       { ao }
     { a~a }       { à }
@@ -402,7 +400,7 @@
     { Em~os }     { Nos }
     { Em~as }     { Nas }
   }
-\tl_gset:Nn \crefthe_contraction_rule_uppercase_portuguese_tl
+\tl_gset:Nn \g_crefthe_contraction_rule_uppercase_portuguese_tl
   {
     { a~o }       { Ao }
     { a~a }       { À }
@@ -430,7 +428,7 @@
     { Em~as }     { Nas }
   }
 
-\tl_gset:Nn \crefthe_contraction_rule_brazilian_tl
+\tl_gset:Nn \g_crefthe_contraction_rule_brazilian_tl
   {
     { a~o }       { ao }
     { a~a }       { à }
@@ -457,7 +455,7 @@
     { Em~os }     { Nos }
     { Em~as }     { Nas }
   }
-\tl_gset:Nn \crefthe_contraction_rule_uppercase_brazilian_tl
+\tl_gset:Nn \g_crefthe_contraction_rule_uppercase_brazilian_tl
   {
     { a~o }       { Ao }
     { a~a }       { À }
