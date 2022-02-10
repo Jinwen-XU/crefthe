@@ -134,7 +134,7 @@
     \bool_set_false:N \l__crefthe_uppercase_bool
   }
 
-\prg_generate_conditional_variant:Nnn \str_case_e:nn { nv } { p, T, F, TF }
+\prg_generate_conditional_variant:Nnn \str_case_e:nn { nv } { T, F, TF }
 \cs_new:Npn \crefthe_contraction:nn #1#2
   {
     \exp_args:Ne \__crefthe_contraction:nnn
