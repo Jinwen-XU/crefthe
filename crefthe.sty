@@ -13,7 +13,7 @@
 \RequirePackage{l3keys2e}
 \ProvidesExplPackage
   {crefthe}
-  {2022/02/10} {}
+  {2022/02/20} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -92,26 +92,23 @@
 
 \NewDocumentCommand \crefthename { m O{} m O{} m }
   {
-    \__crefthe_name_general:nnnnnNN { #1 } { #2 } { #3 } { #4 } { #5 }
-      c \crefthe_crefname_original:w
+    \__crefthe_name_general:nnnnnn { #1 } { #2 } { #3 } { #4 } { #5 } { c }
   }
 \NewDocumentCommand \Crefthename { m O{} m O{} m }
   {
-    \__crefthe_name_general:nnnnnNN { #1 } { #2 } { #3 } { #4 } { #5 }
-      C \crefthe_Crefname_original:w
+    \__crefthe_name_general:nnnnnn { #1 } { #2 } { #3 } { #4 } { #5 } { C }
   }
-\cs_new_protected:Npn \__crefthe_name_general:nnnnnNN #1 #2 #3 #4 #5 #6 #7
+\cs_new_protected:Npn \__crefthe_name_general:nnnnnn #1 #2 #3 #4 #5 #6
   {
     % #6 is c or C
-    % #7 is \crefthe_crefname_original:w or \crefthe_Crefname_original:w
     \tl_if_blank:nTF { #2 }
       {
-        #7 { #1 } { #3 } { #5 }
+        \cs:w crefthe_#6refname_original:w \cs_end: { #1 } { #3 } { #5 }
         \cs_set:cn { #6ref_#1_format:nnn } { ##2 #3 ~ ##1 ##3 }
         \cs_set:cn { #6ref_#1_format_first:nnn } { ##2 #5 ~ ##1 ##3 }
       }
       {
-        #7 { #1 } { \crefthemark { #2 } #3 } { \crefthemark { #4 } #5 }
+        \cs:w crefthe_#6refname_original:w \cs_end: { #1 } { \crefthemark { #2 } #3 } { \crefthemark { #4 } #5 }
         \cs_set:cn { #6ref_#1_format:nnn } { \crefthemark { #2 } ##2 #3 ~ ##1 ##3 }
         \cs_set:cn { #6ref_#1_format_first:nnn } { \crefthemark { #4 } ##2 #5 ~ ##1 ##3 }
       }
