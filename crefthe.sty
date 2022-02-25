@@ -118,27 +118,34 @@
     \use:c { crefthe_#6refname_original:w } { #1 } { #2 #3 } { #4 #5 }
     \hook_gput_code:nnn { begindocument } { crefthe }
       {
-        \__crefthe_patch_format:nnnnn { 2 } { #6ref@#1@format } { #6ref@#1@name } { #2 } { #3 }
-        \__crefthe_patch_format:nnnnn { 2 } { #6ref@#1@format@first } { #6ref@#1@name@plural } { #4 } { #5 }
-        \__crefthe_patch_format:nnnnn { 3 } { #6refrange@#1@format } { #6ref@#1@name@plural } { #4 } { #5 }
+        \crefthe_patch_format:nnnnn { 2 } { #6ref@#1@format } { #6ref@#1@name } { #2 } { #3 }
+        \crefthe_patch_format:nnnnn { 2 } { #6ref@#1@format@first } { #6ref@#1@name@plural } { #4 } { #5 }
+        \crefthe_patch_format:nnnnn { 3 } { #6refrange@#1@format } { #6ref@#1@name@plural } { #4 } { #5 }
+        \crefthe_patch_format:nnnnn { 3 } { #6refrange@#1@format@first } { #6ref@#1@name@plural } { #4 } { #5 }
       }
   }
 
-\cs_new_protected:Nn \__crefthe_patch_format:nnnnn
+\seq_new:N \g__crefthe_already_patched_seq
+
+\cs_new_protected:Nn \crefthe_patch_format:nnnnn
   % #1 = the # number for the beginning mark of hyperlink
   % #2 = name of the format command
   % #3 = name of the command after hyperlink mark
   % #4 = new content before the mark
   % #5 = new content after the mark
   {
-    \makeatletter
-    \tl_set:Nn \l_tmpa_tl { #4 }
-    \tl_set:Nn \l_tmpb_tl { #5 }
-    \exp_args:Nc \regexpatchcmd { #2 }
-      { \cP. #1 \c{ #3 } }
-      { \u{l_tmpa_tl} \cP\# #1 \u{l_tmpb_tl} }
-      { } { \PatchFailed }
-    \makeatother
+    \seq_if_in:NnF \g__crefthe_already_patched_seq { #2 - #3 }
+      {
+        \makeatletter
+        \tl_set:Nn \l_tmpa_tl { #4 }
+        \tl_set:Nn \l_tmpb_tl { #5 }
+        \exp_args:Nc \regexpatchcmd { #2 }
+          { \cP. #1 \c{ #3 } }
+          { \u{l_tmpa_tl} \cP\# #1 \u{l_tmpb_tl} }
+          { } { \PatchFailed }
+        \makeatother
+        \seq_gput_right:Nn \g__crefthe_already_patched_seq { #2 - #3 }
+      }
   }
 
 
