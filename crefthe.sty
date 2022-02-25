@@ -13,7 +13,7 @@
 \RequirePackage{l3keys2e}
 \ProvidesExplPackage
   {crefthe}
-  {2022/02/20} {}
+  {2022/02/25} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -26,6 +26,7 @@
 \ProcessKeysOptions { crefthe }
 
 \RequirePackage { cleveref }
+\RequirePackage { regexpatch }
 
 \NewCommandCopy \crefthe_cref_original:w     \cref
 \NewCommandCopy \crefthe_Cref_original:w     \Cref
@@ -53,7 +54,7 @@
     \bool_set_true:N \l__crefthe_uppercase_bool
     \__crefthe_cref_general:NNNnnN #1 #2 #3 { #4 } { #5 } \crefthe_Cref_original:w
   }
-\cs_new_protected:Npn \__crefthe_cref_general:NNNnnN #1 #2 #3 #4 #5 #6
+\cs_new_protected:Nn \__crefthe_cref_general:NNNnnN
   {
     \bool_if:NTF #2
       { \tl_set:Nn \l__crefthe_prep_once_tl { #4 } }
@@ -78,7 +79,7 @@
   }
 
 % \__crefthe_prep_mode: defines the default mode for supported languages
-\cs_new:Npn \__crefthe_prep_mode:
+\cs_new:Nn \__crefthe_prep_mode:
   {
     \str_case:Vn \languagename
       {
@@ -94,30 +95,52 @@
   {
     \__crefthe_name_general:nnnnnn { #1 } { #2 } { #3 } { #4 } { #5 } { c }
   }
+
 \NewDocumentCommand \Crefthename { m O{} m O{} m }
   {
     \__crefthe_name_general:nnnnnn { #1 } { #2 } { #3 } { #4 } { #5 } { C }
   }
-\cs_new_protected:Npn \__crefthe_name_general:nnnnnn #1 #2 #3 #4 #5 #6
+
+\cs_new_protected:Nn \__crefthe_name_general:nnnnnn
   {
     % #6 is c or C
     \tl_if_blank:nTF { #2 }
       {
-        \cs:w crefthe_#6refname_original:w \cs_end: { #1 } { #3 } { #5 }
-        \cs_set:cn { #6ref_#1_format:nnn } { ##2 #3 ~ ##1 ##3 }
-        \cs_set:cn { #6ref_#1_format_first:nnn } { ##2 #5 ~ ##1 ##3 }
+        \__crefthe_name_general_do:nnnnnn { #1 } {} { #3 } {} { #5 } { #6 }
       }
       {
-        \cs:w crefthe_#6refname_original:w \cs_end: { #1 } { \crefthemark { #2 } #3 } { \crefthemark { #4 } #5 }
-        \cs_set:cn { #6ref_#1_format:nnn } { \crefthemark { #2 } ##2 #3 ~ ##1 ##3 }
-        \cs_set:cn { #6ref_#1_format_first:nnn } { \crefthemark { #4 } ##2 #5 ~ ##1 ##3 }
-      }
-    \hook_gput_code:nnn { begindocument } { crefthe }
-      {
-        \cs_set_eq:cc { #6ref@ #1 @format } { #6ref_#1_format:nnn }
-        \cs_set_eq:cc { #6ref@ #1 @format@first } { #6ref_#1_format_first:nnn }
+        \__crefthe_name_general_do:nnnnnn { #1 } { \crefthemark { #2 } } { #3 } { \crefthemark { #4 } } { #5 } { #6 }
       }
   }
+
+\cs_new_protected:Nn \__crefthe_name_general_do:nnnnnn
+  {
+    \use:c { crefthe_#6refname_original:w } { #1 } { #2 #3 } { #4 #5 }
+    \hook_gput_code:nnn { begindocument } { crefthe }
+      {
+        \__crefthe_patch_format:nnnnn { 2 } { #6ref@#1@format } { #6ref@#1@name } { #2 } { #3 }
+        \__crefthe_patch_format:nnnnn { 2 } { #6ref@#1@format@first } { #6ref@#1@name@plural } { #4 } { #5 }
+        \__crefthe_patch_format:nnnnn { 3 } { #6refrange@#1@format } { #6ref@#1@name@plural } { #4 } { #5 }
+      }
+  }
+
+\cs_new_protected:Nn \__crefthe_patch_format:nnnnn
+  % #1 = the # number for the beginning mark of hyperlink
+  % #2 = name of the format command
+  % #3 = name of the command after hyperlink mark
+  % #4 = new content before the mark
+  % #5 = new content after the mark
+  {
+    \makeatletter
+    \tl_set:Nn \l_tmpa_tl { #4 }
+    \tl_set:Nn \l_tmpb_tl { #5 }
+    \exp_args:Nc \regexpatchcmd { #2 }
+      { \cP. #1 \c{ #3 } }
+      { \u{l_tmpa_tl} \cP\# #1 \u{l_tmpb_tl} }
+      { } { \PatchFailed }
+    \makeatother
+  }
+
 
 \cs_generate_variant:Nn \text_lowercase:n { V }
 \NewDocumentCommand \crefthemark { m }
@@ -132,13 +155,13 @@
   }
 
 \prg_generate_conditional_variant:Nnn \str_case_e:nn { nv } { T, F, TF }
-\cs_new:Npn \crefthe_contraction:nn #1#2
+\cs_new:Nn \crefthe_contraction:nn
   {
     \exp_args:Ne \__crefthe_contraction:nnn
       { \text_lowercase:n { #2 } } { #1 } { #2 }
   }
 \cs_generate_variant:Nn \crefthe_contraction:nn { V, Ve }
-\cs_new:Npn \__crefthe_contraction:nnn #1 #2 #3
+\cs_new:Nn \__crefthe_contraction:nnn
   {
     % #1 is \text_lowercase:n { #3 }
     % #2 is the preposition
@@ -157,7 +180,7 @@
           { #2~#3 }
       }
   }
-\cs_new:Npn \__crefthe_conditional_uppercase:n #1
+\cs_new:Nn \__crefthe_conditional_uppercase:n
   {
     \bool_if:NTF \l__crefthe_uppercase_bool
       { \text_titlecase_first:n }
