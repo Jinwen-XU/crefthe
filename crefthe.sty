@@ -42,16 +42,16 @@
 \tl_new:N \l__crefthe_prep_once_tl
 \tl_new:N \l__crefthe_prep_each_tl
 
-\bool_new:N \l__crefthe_uppercase_bool
+\bool_new:N \g__crefthe_uppercase_bool
 
 \NewDocumentCommand \crefthe { s t- t+ O{} m }
   {
-    \bool_set_false:N \l__crefthe_uppercase_bool
+    \bool_gset_false:N \g__crefthe_uppercase_bool
     \__crefthe_cref_general:NNNnnN #1 #2 #3 { #4 } { #5 } \crefthe_cref_original:w
   }
 \NewDocumentCommand \Crefthe { s t- t+ O{} m }
   {
-    \bool_set_true:N \l__crefthe_uppercase_bool
+    \bool_gset_true:N \g__crefthe_uppercase_bool
     \__crefthe_cref_general:NNNnnN #1 #2 #3 { #4 } { #5 } \crefthe_Cref_original:w
   }
 \cs_new_protected:Nn \__crefthe_cref_general:NNNnnN
@@ -151,7 +151,7 @@
     \tl_set:Nx \l__crefthe_prep_each_tl
       { \text_lowercase:V \l__crefthe_prep_each_tl }
     \str_if_eq:eeF { \str_tail:n { #1 } } { ' } { ~ }
-    \bool_set_false:N \l__crefthe_uppercase_bool
+    \bool_gset_false:N \g__crefthe_uppercase_bool
   }
 
 \prg_generate_conditional_variant:Nnn \str_case_e:nn { nv } { T, F, TF }
@@ -182,7 +182,7 @@
   }
 \cs_new:Nn \__crefthe_conditional_uppercase:n
   {
-    \bool_if:NTF \l__crefthe_uppercase_bool
+    \bool_if:NTF \g__crefthe_uppercase_bool
       { \text_titlecase_first:n }
       { \use:n }
         { #1 }
