@@ -43,6 +43,7 @@
 \tl_new:N \l__crefthe_prep_each_tl
 
 \bool_new:N \g__crefthe_uppercase_bool
+\bool_new:N \g__crefthe_has_prep_bool
 
 \NewDocumentCommand \crefthe { s t- t+ O{} m }
   {
@@ -56,6 +57,13 @@
   }
 \cs_new_protected:Nn \__crefthe_cref_general:NNNnnN
   {
+    \tl_if_blank:eTF #4
+      {
+        \bool_gset_false:N \g__crefthe_has_prep_bool
+      }
+      {
+        \bool_gset_true:N \g__crefthe_has_prep_bool
+      }
     \bool_if:NTF #2
       { \tl_set:Nn \l__crefthe_prep_once_tl { #4 } }
       {
