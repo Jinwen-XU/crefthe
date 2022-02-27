@@ -163,7 +163,7 @@
     \crefthe_contraction:Ve \l__crefthe_prep_each_tl
       { \crefthe_contraction:Vn \l__crefthe_prep_once_tl { #1 } }
     \tl_gclear:N \l__crefthe_prep_once_tl
-    \tl_set:Nx \l__crefthe_prep_each_tl
+    \tl_gset:Nx \l__crefthe_prep_each_tl
       { \text_lowercase:V \l__crefthe_prep_each_tl }
     \str_if_eq:eeF { \str_tail:n { #1 } } { ' } { ~ }
     \bool_gset_false:N \g__crefthe_uppercase_bool
