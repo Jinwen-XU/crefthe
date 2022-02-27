@@ -83,6 +83,10 @@
 }{\end{tcolorbox}\ResumeLineNumbers}
 
 
+\newcommand{\packageoption}[1]{\texttt{\textcolor{black!67!green}{#1}}}
+\newcommand{\commandoption}[1]{\texttt{\textcolor{black!67!cyan}{#1}}}
+
+
 \newcommand{\crefthepackage}{\textsf{crefthe}}
 
 \begin{document}
@@ -231,7 +235,7 @@ To place hyperlinks at the right place, \lstinline|\crefthename| touches the cor
 
 \crefthepackage{} loads \textsf{cleveref} automatically and pass all the options to it. All its commands, used without optional arguments, degenerate to those in \textsf{cleveref}. For example, \lstinline|\crefthe{...}| is the same as \lstinline|\cref{...}|, and \lstinline|\crefthename| is the same as \lstinline|\crefname| if the definite articles are not specified. That said, you can safely use the command \lstinline|\crefthe| everywhere in your document without causing extra trouble.
 
-With the option \texttt{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| -- and similarly with \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|.
+With the package option \packageoption{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| -- and similarly with \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|.
 
 
 \section{Known issues}
@@ -240,6 +244,13 @@ With the option \texttt{overwrite}, user commands in \textsf{cleveref} will be r
     \item The current mechanism does not work for German. The author plans to adopt a more refined approach in later versions in order to support the various situations in German. Meanwhile, you may consider the package \textsf{zref-clever}, which has a much more powerful and sophisticated interface for configuring cross referencing.
     \item The names of theorem-like environments are not provided here, you need to define them by yourself. However, users are encouraged to use the \ProjLib{} toolkit (more specifically, the internal package \textsf{create-theorem}), which already handles everything for you.
 \end{itemize}
+
+\medskip
+If you run into any issues or have ideas for improvement, feel free to discuss on:
+\begin{center}
+    \url{https://github.com/Jinwen-XU/crefthe/issues}
+\end{center}
+or email me via \href{mailto:ProjLib@outlook.com}{\texttt{ProjLib@outlook.com}}.
 
 
 \end{document}
