@@ -13,7 +13,7 @@
 \RequirePackage{l3keys2e}
 \ProvidesExplPackage
   {crefthe}
-  {2022/02/27} {}
+  {2022/02/28} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -145,8 +145,8 @@
     \seq_if_in:NnF \g__crefthe_already_patched_seq { #2 - #3 }
       {
         \makeatletter
-        \tl_set:Nn \l_tmpa_tl { #4 }
-        \tl_set:Nn \l_tmpb_tl { #5 }
+        \tl_set:No \l_tmpa_tl { #4 }
+        \tl_set:No \l_tmpb_tl { #5 }
         \exp_args:Nc \regexpatchcmd { #2 }
           { \cP. #1 \c{ #3 } }
           { \u{l_tmpa_tl} \cP\# #1 \u{l_tmpb_tl} }
