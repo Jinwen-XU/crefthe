@@ -9,51 +9,66 @@
 %% For typesetting code
 %%================================
 \usepackage{listings}
-\definecolor{maintheme}{RGB}{70,130,180}
-\definecolor{forestgreen}{RGB}{21,122,81}
-\definecolor{lightergray}{gray}{0.99}
-\lstset{language=[LaTeX]TeX,
-    keywordstyle=\color{maintheme},
-    basicstyle=\ttfamily,
-    commentstyle=\color{forestgreen}\ttfamily,
-    stringstyle=\rmfamily,
-    showstringspaces=false,
-    breaklines=true,
-    frame=lines,
-    backgroundcolor=\color{lightergray},
-    flexiblecolumns=true,
-    escapeinside={(*}{*)},
-    % numbers=left,
-    numberstyle=\scriptsize, stepnumber=1, numbersep=5pt,
-    % firstnumber=last,
+\usepackage{xcolor}
+\usepackage{setspace}
+\definecolor{code-main}{RGB}{70,130,180}
+\definecolor{code-expl3}{RGB}{240,50,60}
+\definecolor{code-option}{RGB}{40,110,20}
+\definecolor{code-keys}{RGB}{100,130,150}
+\definecolor{code-comment}{RGB}{20,120,80}
+\definecolor{code-background}{gray}{0.99}
+\lstset{
+    language = [LaTeX]TeX,
+    basicstyle = \ttfamily,
+    keywordstyle = \color{code-main},
+    commentstyle = \color{code-comment},
+    showstringspaces = false,
+    breaklines = true,
+    frame = lines,
+    backgroundcolor = \color{code-background},
+    flexiblecolumns = true,
+    escapeinside = {(*}{*)},
+    alsoletter = {_,:},
+    % numbers = left,
+    % firstnumber = last,
+    numberstyle = \scriptsize\ttfamily,
+    stepnumber = 1,
+    numbersep = 5pt,
 }
-\providecommand{\meta}[1]{$\langle${\normalfont\itshape#1}$\rangle$}
-\lstset{moretexcs=%
-    {
+\newcommand{\meta}[1]{$\langle${\normalfont\itshape#1}$\rangle$}
+\lstset{% LaTeX2 commands
+    classoffset = 0,
+    texcsstyle =* \color{code-main},
+    moretexcs =
+      {
         cref,crefname,
         Cref,Crefname,
         crefformat,
-        crefthe,crefthename,crefthemark,
+        crefthe,crefthename,
         Crefthe,Crefthename,
+        crefthemark,
         selectlanguage,
-    }
+      }
 }
-\lstnewenvironment{code}%
-{\setstretch{1.07}\LocallyStopLineNumbers%
-\setkeys{lst}{columns=fullflexible,keepspaces=true}%
+\lstset{% LaTeX3 commands
+    classoffset = 1,
+    texcsstyle =* \color{code-expl3},
+    moretexcs =
+      {
+      }
 }
-{\ResumeLineNumbers\vspace{-.5\baselineskip}}
-\lstnewenvironment{code*}%
-{\setstretch{1.07}\LocallyStopLineNumbers%
-\setkeys{lst}{numbers=left,columns=fullflexible,keepspaces=true}%
-}
-{\ResumeLineNumbers}
+\lstnewenvironment{code}{\setstretch{1.05}\LocallyStopLineNumbers}{\ResumeLineNumbers\vspace{-.3\baselineskip}\vspace{-.5\parskip}}
+\lstnewenvironment{code*}{\setstretch{1.05}\lstset{numbers=left}\LocallyStopLineNumbers}{\ResumeLineNumbers\vspace{-.3\baselineskip}\vspace{-.5\parskip}}
+
+\newcommand{\packageoption}[1]{\texttt{\textcolor{code-option}{#1}}}
+\newcommand{\commandoption}[1]{\texttt{\textcolor{code-keys}{#1}}}
 
 %%================================
 %% tip
 %%================================
 \usepackage[many]{tcolorbox}
-\newenvironment{tip}[1][Tip]{%
+\newenvironment{tip}[1][Tip]
+  {%
     \LocallyStopLineNumbers%
     \begin{tcolorbox}[breakable,
         enhanced,
@@ -69,22 +84,27 @@
         top = 2.5mm,
         bottom = 1.5mm,
         title={\scshape\sffamily #1}]%
-}{\end{tcolorbox}\ResumeLineNumbers}
+  }
+  {%
+    \end{tcolorbox}%
+    \ResumeLineNumbers%
+  }
 
 %%================================
 %% demo
 %%================================
-\newenvironment{demo}{%
+\newenvironment{demo}
+  {%
     \LocallyStopLineNumbers%
     \begin{tcolorbox}[enhanced jigsaw,pad at break*=1mm,breakable,
         left=2.5mm,right=3mm,top=0.5mm,bottom=0mm,
         colback=gray!5!paper,boxrule=0pt,frame hidden,
         borderline west={1.2mm}{0mm}{gray!55!paper},arc=.7mm]%
-}{\end{tcolorbox}\ResumeLineNumbers}
-
-
-\newcommand{\packageoption}[1]{\texttt{\textcolor{black!67!green}{#1}}}
-\newcommand{\commandoption}[1]{\texttt{\textcolor{black!67!cyan}{#1}}}
+  }
+  {%
+    \end{tcolorbox}%
+    \ResumeLineNumbers%
+  }
 
 
 \newcommand{\crefthepackage}{\textsf{crefthe}}
@@ -165,7 +185,7 @@ Before everything, you need to define the names, which can be done with \lstinli
 \end{tip}
 
 Then you can use the command \lstinline|\crefthe| as follows:
-\begin{itemize}
+\begin{itemize}[label=,leftmargin=1.25em,itemindent=-1.25em]
     \item \lstinline|\crefthe[|\meta{prep}\lstinline|]{|\meta{labels}\lstinline|}|
     \begin{itemize}
         \item This will pass the preposition \meta{prep} to the definite articles that follows. Its behavior depends on the current language (for example, in Spanish, \meta{prep} is passed only to the first definite article, while in French it is passed to everyone).
