@@ -13,7 +13,7 @@
 \RequirePackage{l3keys2e}
 \ProvidesExplPackage
   {crefthe}
-  {2022/03/01} {}
+  {2022/04/24} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -57,7 +57,7 @@
   }
 \cs_new_protected:Nn \__crefthe_cref_general:NNNnnN
   {
-    \tl_if_blank:eTF #4
+    \tl_if_blank:eTF { #4 }
       {
         \bool_gset_false:N \g__crefthe_has_prep_bool
       }
