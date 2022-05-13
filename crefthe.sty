@@ -13,17 +13,24 @@
 \RequirePackage{l3keys2e}
 \ProvidesExplPackage
   {crefthe}
-  {2022/04/24} {}
+  {2022/05/13} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
   {
-    , overwrite .bool_set:N = \l__crefthe_overwrite_bool
-    , overwrite .initial:n  = { false }
-    , unknown .code:n       =
-      { \PassOptionsToPackage { \CurrentOption } { cleveref } }
+    , overwrite  .bool_set:N = \l__crefthe_overwrite_bool
+    , overwrite  .initial:n  = { false }
+    , nameinlink .bool_set:N = \l__crefthe_nameinlink_bool
+    , nameinlink .initial:n  = { false }
+    , unknown    .code:n     =
+        { \PassOptionsToPackage { \CurrentOption } { cleveref } }
   }
 \ProcessKeysOptions { crefthe }
+
+\bool_if:NT \l__crefthe_nameinlink_bool
+  {
+    \PassOptionsToPackage { nameinlink } { cleveref }
+  }
 
 \RequirePackage { cleveref }
 \RequirePackage { regexpatch }
@@ -124,12 +131,15 @@
 \cs_new_protected:Nn \__crefthe_name_general_do:nnnnnn
   {
     \use:c { crefthe_#6refname_original:w } { #1 } { #2 #3 } { #4 #5 }
-    \hook_gput_code:nnn { begindocument } { crefthe }
+    \bool_if:NT \l__crefthe_nameinlink_bool
       {
-        \crefthe_patch_format:nnnn { #6ref@#1@format } { #6ref@#1@name } { #2 } { #3 }
-        \crefthe_patch_format:nnnn { #6ref@#1@format@first } { #6ref@#1@name@plural } { #4 } { #5 }
-        \crefthe_patch_format:nnnn { #6refrange@#1@format } { #6ref@#1@name@plural } { #4 } { #5 }
-        \crefthe_patch_format:nnnn { #6refrange@#1@format@first } { #6ref@#1@name@plural } { #4 } { #5 }
+        \hook_gput_code:nnn { begindocument } { crefthe }
+          {
+            \crefthe_patch_format:nnnn { #6ref@#1@format } { #6ref@#1@name } { #2 } { #3 }
+            \crefthe_patch_format:nnnn { #6ref@#1@format@first } { #6ref@#1@name@plural } { #4 } { #5 }
+            \crefthe_patch_format:nnnn { #6refrange@#1@format } { #6ref@#1@name@plural } { #4 } { #5 }
+            \crefthe_patch_format:nnnn { #6refrange@#1@format@first } { #6ref@#1@name@plural } { #4 } { #5 }
+          }
       }
   }
 
@@ -149,12 +159,15 @@
         \exp_args:Nc \regexpatchcmd { #1 }
           { (\cP\# .) \c{ #2 } }
           { \u{l_tmpa_tl} \1 \u{l_tmpb_tl} }
-          { } { \PatchFailed }
+          { } { \msg_warning:nnn { crefthe } { format-patch-failed } { #1 } }
         \makeatother
         \seq_gput_right:Nn \g__crefthe_already_patched_seq { #1 - #2 }
       }
   }
 
+\msg_new:nnn { crefthe }
+  { format-patch-failed }
+  { Failed~to~patch~the~format~"\iow_char:N \\#1"! }
 
 \cs_generate_variant:Nn \text_lowercase:n { V }
 \NewDocumentCommand \crefthemark { m }
