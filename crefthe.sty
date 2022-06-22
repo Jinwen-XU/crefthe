@@ -9,8 +9,7 @@
 %%
 %%    http://www.latex-project.org/lppl.txt
 %%
-\NeedsTeXFormat{LaTeX2e}[2020-10-01]
-\RequirePackage{l3keys2e}
+\NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
   {2022/05/13} {}
@@ -25,7 +24,7 @@
     , unknown    .code:n     =
         { \PassOptionsToPackage { \CurrentOption } { cleveref } }
   }
-\ProcessKeysOptions { crefthe }
+\ProcessKeyOptions [ crefthe ]
 
 \bool_if:NT \l__crefthe_nameinlink_bool
   {
