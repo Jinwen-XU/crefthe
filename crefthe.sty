@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2022/06/29} {}
+  {2022/06/30} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -223,6 +223,22 @@
       { \text_titlecase_first:n }
       { \use:n }
         { #1 }
+  }
+
+\NewDocumentCommand \crefthepatchname { m }
+  {
+    \clist_map_inline:nn { #1 }
+      {
+        \crefthe_patch_name:n { ##1 }
+      }
+  }
+
+\cs_new:Nn \crefthe_patch_name:n
+  {
+    \tl_gput_left:cn { cref@#1@name        } { \crefthemark { \crefthe_empty_adjust:n {} } }
+    \tl_gput_left:cn { cref@#1@name@plural } { \crefthemark { \crefthe_empty_adjust:n {} } }
+    \tl_gput_left:cn { Cref@#1@name        } { \crefthemark { \crefthe_empty_adjust:n {} } }
+    \tl_gput_left:cn { Cref@#1@name@plural } { \crefthemark { \crefthe_empty_adjust:n {} } }
   }
 
 \hook_gput_code:nnn { begindocument/end } { crefthe }

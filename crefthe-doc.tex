@@ -47,6 +47,7 @@
         crefthe,crefthename,
         Crefthe,Crefthename,
         crefthemark,
+        crefthepatchname,
         selectlanguage,
       }
 }
@@ -111,7 +112,7 @@
 
 \begin{document}
 
-\def\PackageVersion{2022/06/29}
+\def\PackageVersion{2022/06/30}
 
 \title{\crefthepackage{}\\\smallskip\itshape Cross referencing with proper definite articles}
 \author{Jinwen XU}
@@ -252,12 +253,21 @@ Of course you will have to define the \lstinline|\Crefthename|s separately, for 
 
 To place hyperlinks at the right place, \lstinline|\crefthename| touches the corresponding \lstinline|\crefformat| internally, which makes the format language-dependent. If you are writing multi-language documents, you may consider putting \lstinline|\crefthename| inside your language configuration so as to reset it each time you select a new language.
 
+\section{Dealing with existed \texttt{cref} / \texttt{Cref} names}
+
+For those preset names defined with \lstinline|\crefname|\,/\,\lstinline|\Crefname|, such as the ones for \texttt{chapter}, \texttt{section} and \texttt{subsection}, etc., the optional argument of \lstinline|\crefthe|\,/\,\lstinline|\Crefthe| shall be useless: names defined with \lstinline|\crefthename|\,/\,\lstinline|\Crefthename| have a \lstinline|\crefthemark| marking the definite articles, which also deals with the given preposition ; without \lstinline|\crefthemark|, the preposition is simply ignored.
+
+\lstinline|\crefthepatchname{|\meta{counters}\lstinline|}| is provided for this purpose. With this, an empty mark shall be added before the existed singular and plural names. However, it is still recommended to simply redefine the names with \lstinline|\crefthename|\,/\,\lstinline|\Crefthename|, especially in multilingual documents.
+
+% For multilingual documents, you may need to add this to your language configuration so as to reapply it each time you select a new language.
+
 
 \section{The relationship with \textsf{cleveref}}
 
 \crefthepackage{} loads \textsf{cleveref} automatically and pass related options to it. All its commands, used without optional arguments, degenerate to those in \textsf{cleveref}. For example, \lstinline|\crefthe{...}| is the same as \lstinline|\cref{...}|, and \lstinline|\crefthename| is the same as \lstinline|\crefname| if the definite articles are not specified. That said, you can safely use the command \lstinline|\crefthe| everywhere in your document without causing extra trouble.
 
 With the package option \packageoption{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| -- and similarly with \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|.
+
 
 \clearpage
 
