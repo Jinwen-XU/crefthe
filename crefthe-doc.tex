@@ -43,9 +43,13 @@
       {
         cref,crefname,
         Cref,Crefname,
+        namecref,namecrefs,
+        nameCref,nameCrefs,
         crefformat,
         crefthe,crefthename,
         Crefthe,Crefthename,
+        namecrefthe,namecrefsthe,
+        nameCrefthe,nameCrefsthe,
         crefthemark,
         crefthepatchname,
         selectlanguage,
@@ -112,7 +116,7 @@
 
 \begin{document}
 
-\def\PackageVersion{2022/07/24}
+\def\PackageVersion{2022/08/28}
 
 \title{\crefthepackage{}\\\smallskip\itshape Cross referencing with proper definite articles}
 \author{Jinwen XU}
@@ -200,7 +204,10 @@ Then you can use the command \lstinline|\crefthe| as follows:
 \end{itemize}
 
 \begin{tip}
-    There is also a stared version \lstinline|\crefthe*| for generating the same referencing text but without creating hyperlinks.
+    \begin{itemize}
+        \item There is also a stared version \lstinline|\crefthe*| for generating the same referencing text without creating hyperlinks.
+        \item The name-only relatives are also available: \lstinline|\namecrefthe| and \lstinline|\namecrefsthe|.
+    \end{itemize}
 \end{tip}
 
 % However, before using it, you should first define the \lstinline|\crefname|s carefully. The definite article in \lstinline|\crefname|s needs to be marked manually using \lstinline|\crefthemark|, for example:
@@ -236,7 +243,7 @@ Voilà !
 
 \section{Regarding the upper and lower cases}
 
-The commands also have correspoding uppercased version: \lstinline|\Crefthename| and \lstinline|\Crefthe|, similar to \textsf{cleveref}'s \lstinline|\Crefname| and \lstinline|\Cref|, reserved for use at the beginning of a sentence. \lstinline|\Crefthe| can handle case changing automatically: for example, with \lstinline|\Crefthe[À]{thm1,thm2,prop3}|, you will get something like
+As in \textsf{cleveref}, these commands have corresponding uppercased version: \lstinline|\Crefthename|,\linebreak \lstinline|\Crefthe|, \lstinline|\nameCrefthe| and \lstinline|\nameCrefsthe|, similar to \lstinline|\Crefname|, \lstinline|\Cref|, \lstinline|\nameCref|\linebreak and \lstinline|\nameCrefs|, reserved for using at the beginning of a sentence. \lstinline|\Crefthe| (and the name-only relatives) can handle case changing automatically: for example, with \lstinline|\Crefthe[À]{thm1,thm2,prop3}|, you will get something like
 
 \begin{demo}
     \textbf{Aux} théorèmes 1 et 2 et \textbf{à la} proposition 3
@@ -251,7 +258,7 @@ Of course you will have to define the \lstinline|\Crefthename|s separately, for 
 
 \section{For writing multi-language documents}
 
-To place hyperlinks at the right place, \lstinline|\crefthename| touches the corresponding \lstinline|\crefformat| internally, which makes the format language-dependent. If you are writing multi-language documents, you may consider putting \lstinline|\crefthename| inside your language configuration so as to reset it each time you select a new language.
+To place hyperlinks at the correct place, \lstinline|\crefthename| touches the corresponding format macro \lstinline|\crefformat| internally, which makes the format language-dependent. If you are writing multi-language documents, you may consider putting \lstinline|\crefthename| inside your language configuration so as to reset it each time you select a new language.
 
 \section{Dealing with existed \texttt{cref} / \texttt{Cref} names}
 

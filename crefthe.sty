@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2022/07/24} {}
+  {2022/08/28} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -34,10 +34,14 @@
 \RequirePackage { cleveref }
 \RequirePackage { regexpatch }
 
-\NewCommandCopy \crefthe_cref_original:w     \cref
-\NewCommandCopy \crefthe_Cref_original:w     \Cref
-\NewCommandCopy \crefthe_crefname_original:w \crefname
-\NewCommandCopy \crefthe_Crefname_original:w \Crefname
+\NewCommandCopy \crefthe_cref_original:w      \cref
+\NewCommandCopy \crefthe_Cref_original:w      \Cref
+\NewCommandCopy \crefthe_crefname_original:w  \crefname
+\NewCommandCopy \crefthe_Crefname_original:w  \Crefname
+\NewCommandCopy \crefthe_namecref_original:w  \namecref
+\NewCommandCopy \crefthe_nameCref_original:w  \nameCref
+\NewCommandCopy \crefthe_namecrefs_original:w \namecrefs
+\NewCommandCopy \crefthe_nameCrefs_original:w \nameCrefs
 
 \str_new:N \l__crefthe_tmpa_str
 
@@ -61,6 +65,28 @@
     \bool_gset_true:N \g__crefthe_uppercase_bool
     \__crefthe_cref_general:NNNnnN #1 #2 #3 { #4 } { #5 } \crefthe_Cref_original:w
   }
+
+\NewDocumentCommand \namecrefthe { t- t+ O{} m }
+  {
+    \bool_gset_false:N \g__crefthe_uppercase_bool
+    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_namecref_original:w
+  }
+\NewDocumentCommand \nameCrefthe { t- t+ O{} m }
+  {
+    \bool_gset_true:N \g__crefthe_uppercase_bool
+    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_nameCref_original:w
+  }
+\NewDocumentCommand \namecrefsthe { t- t+ O{} m }
+  {
+    \bool_gset_false:N \g__crefthe_uppercase_bool
+    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_namecrefs_original:w
+  }
+\NewDocumentCommand \nameCrefsthe { t- t+ O{} m }
+  {
+    \bool_gset_true:N \g__crefthe_uppercase_bool
+    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_nameCrefs_original:w
+  }
+
 \cs_new_protected:Nn \__crefthe_cref_general:NNNnnN
   {
     \tl_if_blank:eTF { #4 }
