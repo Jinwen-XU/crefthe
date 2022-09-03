@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2022/08/28} {}
+  {2022/09/03} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -141,7 +141,7 @@
     \__crefthe_name_general:nnnnnn { #1 } { #2 } { #3 } { #4 } { #5 } { C }
   }
 
-\cs_new:Npn \crefthe_width_of_space_dim { \tex_fontdimen:D 2 \tex_font:D }
+\cs_new:Npn \crefthe_width_of_space_dim { \tex_fontdimen:D 2 \tex_font:D~plus -\tex_fontdimen:D 3 \tex_font:D~minus -\tex_fontdimen:D 4 \tex_font:D }
 
 \cs_new:Nn \crefthe_empty_adjust:n
   {
