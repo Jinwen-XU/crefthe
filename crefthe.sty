@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2022/09/03} {}
+  {2022/09/24} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -112,9 +112,11 @@
               }
           }
       }
+    \group_begin:
     \bool_if:NTF #1
       { #6 * { #5 } } % here #6 is \crefthe_cref_original:w or \crefthe_Cref_original:w
       { #6   { #5 } }
+    \group_end:
     \tl_gclear:N \l__crefthe_prep_each_tl
   }
 
