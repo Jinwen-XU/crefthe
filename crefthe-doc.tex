@@ -116,12 +116,12 @@
 
 \begin{document}
 
-\def\PackageVersion{2022/09/26}
+\def\PackageVersion{2023/07/19}
 
 \title{\crefthepackage{}\\\smallskip\itshape Cross referencing with proper definite articles}
 \author{Jinwen XU}
 \thanks{Corresponding to: \texttt{\crefthepackage{} \PackageVersion}}
-\date{\TheDate{\PackageVersion}[only-year-month], in Paris}
+\date{\TheDate{\PackageVersion}[only-year-month], in Beijing}
 
 \maketitle
 
@@ -132,7 +132,7 @@
 
 \section{The motivation}
 
-By default, with \textsf{cleveref}'s \lstinline|\cref| to reference theorem-like environments, the names do not contain definite articles. While this might be acceptable for English, it is certainly not good enough for languages such as French, Italian, Portuguese, Spanish, etc. -- in these cases there shall be grammatical errors and would give you a strong feeling that it is machine-generated.
+By default, with \textsf{cleveref}'s \lstinline|\cref| to reference theorem-like environments, the names do not contain definite articles. While this might be acceptable for English, it is certainly not good enough for languages such as French, Italian, Portuguese, Spanish, etc. --- in these cases there shall be grammatical errors and would give you a strong feeling that it is machine-generated.
 
 However, even if we manually add the definite articles to the names, there would still be other problems. As an example, if we define the French names to be:
 
@@ -271,17 +271,19 @@ For those preset names defined with \lstinline|\crefname|\,/\,\lstinline|\Crefna
 
 \section{The relationship with \textsf{cleveref}}
 
-\crefthepackage{} loads \textsf{cleveref} automatically and pass related options to it. All its commands, used without optional arguments, degenerate to those in \textsf{cleveref}. For example, \lstinline|\crefthe{...}| is the same as \lstinline|\cref{...}|, and \lstinline|\crefthename| is the same as \lstinline|\crefname| if the definite articles are not specified. That said, you can safely use the command \lstinline|\crefthe| everywhere in your document without causing extra trouble.
+\crefthepackage{} loads \textsf{cleveref} automatically and passes related options to it. All its commands, used without optional arguments, degenerate to those in \textsf{cleveref}. For example, \lstinline|\crefthe{...}|%
+will produce the same result as \lstinline|\cref{...}|, and \lstinline|\crefthename| shall behave the same as \lstinline|\crefname| if the definite articles are not specified. That said, you may safely use the command \lstinline|\crefthe| everywhere in your document without causing extra trouble.
 
-With the package option \packageoption{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| -- and similarly with \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|.
+With the package option \packageoption{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| --- and similarly with \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|.
 
 
 \clearpage
 
 \section{Known issues}
 \begin{itemize}
-    \item \crefthepackage{} currently works for French, Italian, Portuguese (European and Brazilian) and Spanish, certainly more would be added to this list.
-    \item The current mechanism does not work for German. The author plans to adopt a more refined approach in later versions in order to support the various situations in German. Meanwhile, you may consider the package \textsf{zref-clever}, which has a much more powerful and sophisticated interface for configuring cross referencing.
+    \item \crefthepackage{} currently works for French, German, Italian, Portuguese (European and Brazilian) and Spanish --- certainly more languages would be added to this list in the future.
+    \item For now, you cannot specify the masculine/masculine/... of words. This means, for instance, that you cannot make the suffix adjective automatically adopted to the word when using \lstinline|\namecref| --- as an example, if you wish to say \textquote{la proposition suivante} (in French), you would have to write the feminine adjective manually. The situation should be improved with the introduction of a new key-value configuration system, which is currently on the todo-list.
+    Meanwhile, you may consider the package \textsf{zref-clever}, which has a much more powerful and sophisticated interface for configuring cross referencing.
     \item The names of theorem-like environments are not provided here, you need to define them by yourself. However, users are encouraged to use the \ProjLib{} toolkit (more specifically, the internal package \textsf{create-theorem}), which already handles everything for you.
 \end{itemize}
 

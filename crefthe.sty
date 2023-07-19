@@ -87,34 +87,48 @@
     \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_nameCrefs_original:w
   }
 
-\cs_new_protected:Nn \__crefthe_cref_general:NNNnnN
+\keys_define:nn { crefthe-setting }
   {
-    \tl_if_blank:eTF { #4 }
-      {
-        \bool_gset_false:N \g__crefthe_has_prep_bool
-      }
-      {
-        \bool_gset_true:N \g__crefthe_has_prep_bool
-      }
+    , variant       .tl_set:N           = \l__crefthe_variant_tl
+    , unknown       .code:n             = {
+                                            \bool_gset_true:N \g__crefthe_has_prep_bool
+                                            \tl_set:No \l__crefthe_prep_tl { \l_keys_key_tl }
+                                          }
+  }
+
+\cs_new_protected:Nn \__crefthe_cref_general:NNNnnN
+  % #1 = star or not
+  % #2 = -
+  % #3 = +
+  % #4 = key-value
+  % #5 = label
+  % #6 = original command, such as \crefthe_cref_original:w or \crefthe_Cref_original:w
+  {
+    \tl_set:Nn \l__crefthe_variant_tl {}
+    \bool_gset_false:N \g__crefthe_has_prep_bool
+    \tl_set:Nn \l__crefthe_prep_tl {}
+
+    \keys_set:nn { crefthe-setting } { #4 }
+
     \bool_if:NTF #2
-      { \tl_set:Nn \l__crefthe_prep_once_tl { #4 } }
+      { \tl_set:No \l__crefthe_prep_once_tl { \l__crefthe_prep_tl } }
       {
         \bool_if:NTF #3
-          { \tl_set:Nn \l__crefthe_prep_each_tl { #4 } }
+          { \tl_set:No \l__crefthe_prep_each_tl { \l__crefthe_prep_tl } }
           {
             % \str_set:Nx fully expands \__crefthe_prep_mode: into a string,
             % then \str_case:Vn compares the value of the resulting string:
             \str_set:Nx \l__crefthe_tmpa_str { \__crefthe_prep_mode: }
             \str_case:Vn \l__crefthe_tmpa_str
               {
-                { - } { \tl_set:Nn \l__crefthe_prep_once_tl { #4 } }
-                { + } { \tl_set:Nn \l__crefthe_prep_each_tl  { #4 } }
+                { - } { \tl_set:No \l__crefthe_prep_once_tl { \l__crefthe_prep_tl } }
+                { + } { \tl_set:No \l__crefthe_prep_each_tl  { \l__crefthe_prep_tl } }
               }
           }
       }
     \group_begin:
     \bool_if:NTF #1
-      { #6 * { #5 } } % here #6 is \crefthe_cref_original:w or \crefthe_Cref_original:w
+      { #6 * { #5 } }
       { #6   { #5 } }
     \group_end:
     \tl_gclear:N \l__crefthe_prep_each_tl
@@ -157,8 +171,13 @@
   }
 
 \cs_new_protected:Nn \__crefthe_name_general:nnnnnn
+  % #1 = environment name
+  % #2 = singular definite article
+  % #3 = singular name
+  % #4 = plural definite article
+  % #5 = plural name
+  % #6 = c or C
   {
-    % #6 is c or C
     \__crefthe_name_general_do:nnnnnn
       { #1 }
       { \crefthemark { \crefthe_empty_adjust:n { #2 } } }
