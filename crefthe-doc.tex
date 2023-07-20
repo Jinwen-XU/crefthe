@@ -48,6 +48,7 @@
         crefformat,
         crefthe,crefthename,
         Crefthe,Crefthename,
+        crefthevariantname,Crefthevariantname,
         namecrefthe,namecrefsthe,
         nameCrefthe,nameCrefsthe,
         crefthemark,
@@ -116,7 +117,7 @@
 
 \begin{document}
 
-\def\PackageVersion{2023/07/19}
+\def\PackageVersion{2023/07/20}
 
 \title{\crefthepackage{}\\\smallskip\itshape Cross referencing with proper definite articles}
 \author{Jinwen XU}
@@ -241,6 +242,38 @@ which would result in (provided that you have done \lstinline|\selectlanguage{fr
 
 Voilà !
 
+\section{What about German}
+
+In German, there are four declensions: nominative (\texttt{Nominativ}), genitive (\texttt{Genitiv}), dative (\texttt{Dativ}) and accusative (\texttt{Akkusativ}), making the previously presented mechanism insufficient. For such situation, we introduce the command \lstinline|\crefthevariantname| to specify the referencing name for the correspond environment. Below is an example of usage:
+
+\begin{code}
+\crefthevariantname{theorem}
+  {
+    {Satz}{Sätze}
+    , Nominativ = [der]{Satz}[die]{Sätze}
+    , Genitiv   = [des]{Satzes}[der]{Sätze}
+    , Dativ     = [dem]{Satz}[den]{Sätzen}
+    , Akkusativ = [den]{Satz}[die]{Sätze}
+  }
+\end{code}
+
+The first line in the configuration is the default set of names when no variant is specified. It is recommended, though not required.
+
+After this, you may refer to a theorem via
+
+\begin{code}
+\crefthe[(*\meta{prep}*),variant=(*\meta{declension}*)]{(*\meta{label}*)}
+\end{code}
+
+You may also use the shortcuts (\texttt{nom.}, \texttt{gen.}, \texttt{dat.} and \texttt{akk.}), such as:
+
+\begin{code}
+\crefthe[(*\meta{prep}*),Nom]{(*\meta{label}*)}     \crefthe[(*\meta{prep}*),Nom.]{(*\meta{label}*)}
+\crefthe[(*\meta{prep}*),nom]{(*\meta{label}*)}     \crefthe[(*\meta{prep}*),nom.]{(*\meta{label}*)}
+\end{code}
+
+These four are all equivalent and you may choose one to use according to your preference.
+
 \section{Regarding the upper and lower cases}
 
 As in \textsf{cleveref}, these commands have corresponding uppercased version: \lstinline|\Crefthename|,\linebreak \lstinline|\Crefthe|, \lstinline|\nameCrefthe| and \lstinline|\nameCrefsthe|, similar to \lstinline|\Crefname|, \lstinline|\Cref|, \lstinline|\nameCref|\linebreak and \lstinline|\nameCrefs|, reserved for using at the beginning of a sentence. \lstinline|\Crefthe| (and the name-only relatives) can handle case changing automatically: for example, with \lstinline|\Crefthe[À]{thm1,thm2,prop3}|, you will get something like
@@ -277,7 +310,7 @@ will produce the same result as \lstinline|\cref{...}|, and \lstinline|\crefthen
 With the package option \packageoption{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| --- and similarly with \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|.
 
 
-\clearpage
+% \clearpage
 
 \section{Known issues}
 \begin{itemize}

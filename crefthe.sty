@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2022/09/26} {}
+  {2023/07/20} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -240,7 +240,7 @@
     \bool_gset_false:N \g__crefthe_uppercase_bool
   }
 
-\prg_generate_conditional_variant:Nnn \str_case_e:nn { nv } { T, F, TF }
+\prg_generate_conditional_variant:Nnn \str_case_e:nn { ev } { T, F, TF }
 \cs_new:Nn \crefthe_contraction:nn
   {
     \exp_args:Ne \__crefthe_contraction:nnn
@@ -258,7 +258,7 @@
           {
             \exp_args:Ne \__crefthe_conditional_uppercase:n
               {
-                \str_case_e:nvF { #2~#1 }
+                \str_case_e:evF { #2~#1 }
                   { c_crefthe_contraction_rule_ \languagename _tl }
                   { #2~#1 }
               }
@@ -311,6 +311,25 @@
     { À~les  }     { Aux }
     { De~le  }     { Du  }
     { De~les }     { Des }
+  }
+\tl_const:Nn \c_crefthe_contraction_rule_ngerman_tl
+  {
+    { an~dem  }     { am   }
+    { an~das  }     { ans  }
+    { bei~dem }     { beim }
+    { in~dem  }     { im   }
+    { in~das  }     { ins  }
+    { von~dem }     { vom  }
+    { zu~dem  }     { zum  }
+    { zu~der  }     { zur  }
+    { An~dem  }     { Am   }
+    { An~das  }     { Ans  }
+    { Bei~dem }     { Beim }
+    { In~dem  }     { Im   }
+    { In~das  }     { Ins  }
+    { Von~dem }     { Vom  }
+    { Zu~dem  }     { Zum  }
+    { Zu~der  }     { Zur  }
   }
 \tl_const:Nn \c_crefthe_contraction_rule_italian_tl
   {
