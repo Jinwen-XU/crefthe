@@ -1,4 +1,4 @@
-<!-- Copyright (C) 2021-2022 by Jinwen XU -->
+<!-- Copyright (C) 2021-2023 by Jinwen XU -->
 
 # crefthe - cross referencing with proper definite articles
 
@@ -45,6 +45,7 @@ Before everything, you need to define the names, which can be done with `\crefth
 ```latex
 \crefthename{theorem}[le]{théorème}[les]{théorèmes}
 ```
+(*In French*)
 
 Then you can use the command `\crefthe` as follows:
 - `\crefthe[<prep>]{<labels>}`
@@ -54,7 +55,47 @@ Then you can use the command `\crefthe` as follows:
 
 > There is also a stared version `\crefthe*` for generating the same text but without hyperlinks.
 
-*For more information, please refer to its documentation.*
+## Regarding German
+
+In German, there are four declensions: nominative (`Nominativ`), genitive (`Genitiv`), dative (`Dativ`) and accusative (`Akkusativ`). For such situation, we introduce the command `\crefthevariantname` to specify the referencing name for the correspond environment. Below is an example of usage:
+```latex
+\crefthevariantname{theorem}
+  {
+    {Satz}{Sätze}
+    , Nominativ = [der]{Satz}[die]{Sätze}
+    , Genitiv   = [des]{Satzes}[der]{Sätze}
+    , Dativ     = [dem]{Satz}[den]{Sätzen}
+    , Akkusativ = [den]{Satz}[die]{Sätze}
+  }
+```
+The first line in the configuration is the default set of names when no variant is specified. It is recommended, though not required.
+
+After this, you may refer to a theorem via
+
+```latex
+\crefthe[<prep>,variant=<declension>]{<label>}
+```
+
+You may also use the shortcuts (`nom.`, `gen.`, `dat.` and `akk.`), such as:
+
+```latex
+\crefthe[<prep>,Nom]{<label>}     \crefthe[<prep>,Nom.]{<label>}
+\crefthe[<prep>,nom]{<label>}     \crefthe[<prep>,nom.]{<label>}
+```
+
+These four are all equivalent and you may choose one to use according to your preference.
+
+> *For more information, please refer to the documentation.*
+
+# Acknowledge
+
+There are so many people I wish to express my gratitude to during the development of this package, including:
+
+- Patrick Bideault, without whose advice and careful explanation, this package probably would never have been born. Merci !
+
+- Enrico Gregorio, Phelype Oleinik and Joseph Wright (in alphabetical order). They made valuable suggestions in the early development of this package and even edited some of the code themselves.
+
+- Jonathan P. Spratte, without whose help the German support would probably take much longer to complete.
 
 # License
 

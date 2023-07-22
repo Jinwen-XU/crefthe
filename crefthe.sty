@@ -1,5 +1,5 @@
 %%
-%% Copyright (C) 2021-2022 by Jinwen XU
+%% Copyright (C) 2021-2023 by Jinwen XU
 %% ------------------------------------
 %%
 %% This file may be distributed and/or modified under the conditions of
@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2023/07/20} {}
+  {2023/07/22} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -90,6 +90,24 @@
 \keys_define:nn { crefthe-setting }
   {
     , variant       .tl_set:N           = \l__crefthe_variant_tl
+
+    , nom           .meta:n             = { variant = Nominativ }
+    , nom.          .meta:n             = { variant = Nominativ }
+    , Nom           .meta:n             = { variant = Nominativ }
+    , Nom.          .meta:n             = { variant = Nominativ }
+    , gen           .meta:n             = { variant = Genitiv   }
+    , gen.          .meta:n             = { variant = Genitiv   }
+    , Gen           .meta:n             = { variant = Genitiv   }
+    , Gen.          .meta:n             = { variant = Genitiv   }
+    , dat           .meta:n             = { variant = Dativ     }
+    , dat.          .meta:n             = { variant = Dativ     }
+    , Dat           .meta:n             = { variant = Dativ     }
+    , Dat.          .meta:n             = { variant = Dativ     }
+    , akk           .meta:n             = { variant = Akkusativ }
+    , akk.          .meta:n             = { variant = Akkusativ }
+    , Akk           .meta:n             = { variant = Akkusativ }
+    , Akk.          .meta:n             = { variant = Akkusativ }
+
     , unknown       .code:n             = {
                                             \bool_gset_true:N \g__crefthe_has_prep_bool
                                             \tl_set:No \l__crefthe_prep_tl { \l_keys_key_tl }
@@ -137,14 +155,15 @@
 % \__crefthe_prep_mode: defines the default mode for supported languages
 \cs_new:Nn \__crefthe_prep_mode:
   {
-    \str_case:Vn \languagename
+    \str_case:VnF \languagename
       {
         {french}        { + }
+        {ngerman}       { - }
         {italian}       { + }
         {spanish}       { - }
         {portuguese}    { + }
         {brazilian}     { + }
-      }
+      } { + }
   }
 
 \NewDocumentCommand \crefthename { m O{} m O{} m }
@@ -202,6 +221,130 @@
       }
   }
 
+\NewDocumentCommand \crefthevariantname { m m }
+  {
+    \crefthe_parse_variant:n { #2 }
+    \crefthe_pass_variant_to:n { \crefthename { #1 } }
+  }
+
+\NewDocumentCommand \Crefthevariantname { m m }
+  {
+    \crefthe_parse_variant:n { #2 }
+    \crefthe_pass_variant_to:n { \Crefthename { #1 } }
+  }
+
+\tl_new:N \l__crefthe_variant_noun_singular_tl
+\tl_new:N \l__crefthe_variant_noun_plural_tl
+\tl_new:N \l__crefthe_variant_article_singular_tl
+\tl_new:N \l__crefthe_variant_article_plural_tl
+\tl_new:N \l__crefthe_variant_default_noun_singular_tl
+\tl_new:N \l__crefthe_variant_default_noun_plural_tl
+\tl_new:N \l__crefthe_variant_default_article_singular_tl
+\tl_new:N \l__crefthe_variant_default_article_plural_tl
+\bool_new:N \l__crefthe_variant_default_bool
+\cs_new_protected:Npn \crefthe_parse_variant:n #1
+  {
+    \tl_clear:N \l__crefthe_variant_noun_singular_tl
+    \tl_clear:N \l__crefthe_variant_noun_plural_tl
+    \tl_clear:N \l__crefthe_variant_article_singular_tl
+    \tl_clear:N \l__crefthe_variant_article_plural_tl
+    \tl_clear:N \l__crefthe_variant_default_noun_singular_tl
+    \tl_clear:N \l__crefthe_variant_default_noun_plural_tl
+    \tl_clear:N \l__crefthe_variant_default_article_singular_tl
+    \tl_clear:N \l__crefthe_variant_default_article_plural_tl
+    \bool_set_false:N \l__crefthe_variant_default_bool
+    \keyval_parse:NNn
+      \__crefthe_parse_variant_default:n
+      \__crefthe_parse_variant_value:nn
+      { #1 }
+  }
+\tl_new:N \l__crefthe_parsed_tl
+\NewDocumentCommand \__crefthe_variant_parser:w { O{} m O{} m }
+  {
+    \tl_if_blank:nTF { #1 }
+      {
+        \tl_set:Nn \l__crefthe_parsed_tl { { \crefthe_retrieve_space: } { #2 } { \crefthe_retrieve_space: } { #4 } }
+      }
+      {
+        \tl_set:Nn \l__crefthe_parsed_tl { { #1 } { #2 } { #3 } { #4 } }
+      }
+    \use_none_delimit_by_q_stop:w
+  }
+\cs_new_protected:Npn \__crefthe_parse_variant_default:n #1
+  {
+    \bool_set_true:N \l__crefthe_variant_default_bool
+    \__crefthe_variant_parser:w #1 \q_stop
+    \tl_set:Nx \l__crefthe_variant_default_article_singular_tl
+      { \tl_item:Nn \l__crefthe_parsed_tl { 1 } }
+    \tl_set:Nx \l__crefthe_variant_default_noun_singular_tl
+      { \tl_item:Nn \l__crefthe_parsed_tl { 2 } }
+    \tl_set:Nx \l__crefthe_variant_default_article_plural_tl
+      { \tl_item:Nn \l__crefthe_parsed_tl { 3 } }
+    \tl_set:Nx \l__crefthe_variant_default_noun_plural_tl
+      { \tl_item:Nn \l__crefthe_parsed_tl { 4 } }
+  }
+\cs_new_protected:Npn \__crefthe_parse_variant_value:nn #1#2
+  {
+    \__crefthe_variant_parser:w #2 \q_stop
+    \tl_put_right:Nx \l__crefthe_variant_article_singular_tl
+      { { \tl_to_str:n { #1 } } { \tl_item:Nn \l__crefthe_parsed_tl { 1 } } }
+    \tl_put_right:Nx \l__crefthe_variant_noun_singular_tl
+      { { \tl_to_str:n { #1 } } { \tl_item:Nn \l__crefthe_parsed_tl { 2 } } }
+    \tl_put_right:Nx \l__crefthe_variant_article_plural_tl
+      { { \tl_to_str:n { #1 } } { \tl_item:Nn \l__crefthe_parsed_tl { 3 } } }
+    \tl_put_right:Nx \l__crefthe_variant_noun_plural_tl
+      { { \tl_to_str:n { #1 } } { \tl_item:Nn \l__crefthe_parsed_tl { 4 } } }
+  }
+
+\cs_new_protected:Npn \crefthe_pass_variant_to:n #1
+  {
+    \use:e
+      {
+        \exp_not:n { #1 }
+        \bool_if:NTF \l__crefthe_variant_default_bool
+          {
+            [
+              \exp_not:n { \str_case:NnF \l__crefthe_variant_tl }
+                { \exp_not:o \l__crefthe_variant_article_singular_tl }
+                { \exp_not:o \l__crefthe_variant_default_article_singular_tl }
+            ]
+            {
+              \exp_not:n { \str_case:NnF \l__crefthe_variant_tl }
+                { \exp_not:o \l__crefthe_variant_noun_singular_tl }
+                { \exp_not:o \l__crefthe_variant_default_noun_singular_tl }
+            }
+            [
+              \exp_not:n { \str_case:NnF \l__crefthe_variant_tl }
+                { \exp_not:o \l__crefthe_variant_article_plural_tl }
+                { \exp_not:o \l__crefthe_variant_default_article_plural_tl }
+            ]
+            {
+              \exp_not:n { \str_case:NnF \l__crefthe_variant_tl }
+                { \exp_not:o \l__crefthe_variant_noun_plural_tl }
+                { \exp_not:o \l__crefthe_variant_default_noun_plural_tl }
+            }
+          }
+          {
+            [
+              \exp_not:n { \str_case:Nn \l__crefthe_variant_tl }
+                { \exp_not:o \l__crefthe_variant_article_singular_tl }
+            ]
+            {
+              \exp_not:n { \str_case:Nn \l__crefthe_variant_tl }
+                { \exp_not:o \l__crefthe_variant_noun_singular_tl }
+            }
+            [
+              \exp_not:n { \str_case:Nn \l__crefthe_variant_tl }
+                { \exp_not:o \l__crefthe_variant_article_plural_tl }
+            ]
+            {
+              \exp_not:n { \str_case:Nn \l__crefthe_variant_tl }
+                { \exp_not:o \l__crefthe_variant_noun_plural_tl }
+            }
+          }
+      }
+  }
+
 \seq_new:N \g__crefthe_already_patched_seq
 
 \cs_new_protected:Nn \crefthe_patch_format:nnnn
@@ -228,14 +371,13 @@
   { format-patch-failed }
   { Failed~to~patch~the~format~"\iow_char:N \\#1"! }
 
-\cs_generate_variant:Nn \text_lowercase:n { V }
 \NewDocumentCommand \crefthemark { m }
   {
     \crefthe_contraction:Ve \l__crefthe_prep_each_tl
       { \crefthe_contraction:Vn \l__crefthe_prep_once_tl { #1 } }
     \tl_gclear:N \l__crefthe_prep_once_tl
     \tl_gset:Nx \l__crefthe_prep_each_tl
-      { \text_lowercase:V \l__crefthe_prep_each_tl }
+      { \text_lowercase:n { \l__crefthe_prep_each_tl } }
     \str_if_eq:eeF { \str_tail:n { #1 } } { ' } { ~ }
     \bool_gset_false:N \g__crefthe_uppercase_bool
   }

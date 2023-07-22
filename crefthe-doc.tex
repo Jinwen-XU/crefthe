@@ -117,7 +117,7 @@
 
 \begin{document}
 
-\def\PackageVersion{2023/07/20}
+\def\PackageVersion{2023/07/22}
 
 \title{\crefthepackage{}\\\smallskip\itshape Cross referencing with proper definite articles}
 \author{Jinwen XU}
@@ -308,6 +308,20 @@ For those preset names defined with \lstinline|\crefname|\,/\,\lstinline|\Crefna
 will produce the same result as \lstinline|\cref{...}|, and \lstinline|\crefthename| shall behave the same as \lstinline|\crefname| if the definite articles are not specified. That said, you may safely use the command \lstinline|\crefthe| everywhere in your document without causing extra trouble.
 
 With the package option \packageoption{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| --- and similarly with \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|.
+
+
+\clearpage
+
+
+\section{Acknowledgement}
+
+There are so many people I wish to express my gratitude to during the development of this package, including:
+
+\begin{itemize}
+    \item Patrick Bideault, without whose advice and careful explanation, this package would probably never have been born. Merci !
+    \item Enrico Gregorio, Phelype Oleinik and Joseph Wright (in alphabetical order). They made valuable suggestions in the early development of this package and even edited some of the code themselves.
+    \item Jonathan P. Spratte, without whose help the German support would probably take much longer to complete.
+\end{itemize}
 
 
 % \clearpage
