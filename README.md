@@ -87,7 +87,7 @@ These four are all equivalent and you may choose one to use according to your pr
 
 > *For more information, please refer to the documentation.*
 
-# Acknowledge
+# Acknowledgement
 
 There are so many people I wish to express my gratitude to during the development of this package, including:
 

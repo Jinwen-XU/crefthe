@@ -117,7 +117,7 @@
 
 \begin{document}
 
-\def\PackageVersion{2023/07/22}
+\def\PackageVersion{2023/07/23}
 
 \title{\crefthepackage{}\\\smallskip\itshape Cross referencing with proper definite articles}
 \author{Jinwen XU}
@@ -257,37 +257,60 @@ In German, there are four declensions: nominative (\texttt{Nominativ}), genitive
   }
 \end{code}
 
-The first line in the configuration is the default set of names when no variant is specified. It is recommended, though not required.
+\begin{tip}
+    The first line in the configuration is the default set of names when no variant is specified. It is recommended, though not required.
+\end{tip}
 
 After this, you may refer to a theorem via
 
 \begin{code}
-\crefthe[(*\meta{prep}*),variant=(*\meta{declension}*)]{(*\meta{label}*)}
+\crefthe[(*\meta{prep}*),(*\commandoption{variant}*)=(*\meta{declension}*)]{(*\meta{label}*)}
 \end{code}
 
 You may also use the shortcuts (\texttt{nom.}, \texttt{gen.}, \texttt{dat.} and \texttt{akk.}), such as:
 
 \begin{code}
-\crefthe[(*\meta{prep}*),Nom]{(*\meta{label}*)}     \crefthe[(*\meta{prep}*),Nom.]{(*\meta{label}*)}
-\crefthe[(*\meta{prep}*),nom]{(*\meta{label}*)}     \crefthe[(*\meta{prep}*),nom.]{(*\meta{label}*)}
+\crefthe[(*\meta{prep}*),(*\commandoption{Nom}*)]{(*\meta{label}*)}     \crefthe[(*\meta{prep}*),(*\commandoption{Nom.}*)]{(*\meta{label}*)}
+\crefthe[(*\meta{prep}*),(*\commandoption{nom}*)]{(*\meta{label}*)}     \crefthe[(*\meta{prep}*),(*\commandoption{nom.}*)]{(*\meta{label}*)}
 \end{code}
 
 These four are all equivalent and you may choose one to use according to your preference.
 
 \section{Regarding the upper and lower cases}
 
-As in \textsf{cleveref}, these commands have corresponding uppercased version: \lstinline|\Crefthename|,\linebreak \lstinline|\Crefthe|, \lstinline|\nameCrefthe| and \lstinline|\nameCrefsthe|, similar to \lstinline|\Crefname|, \lstinline|\Cref|, \lstinline|\nameCref|\linebreak and \lstinline|\nameCrefs|, reserved for using at the beginning of a sentence. \lstinline|\Crefthe| (and the name-only relatives) can handle case changing automatically: for example, with \lstinline|\Crefthe[À]{thm1,thm2,prop3}|, you will get something like
+As in \textsf{cleveref}, these commands have corresponding uppercased version: \lstinline|\Crefthename|,\linebreak \lstinline|\Crefthe|, \lstinline|\nameCrefthe| and \lstinline|\nameCrefsthe|, similar to \lstinline|\Crefname|, \lstinline|\Cref|, \lstinline|\nameCref|\linebreak and \lstinline|\nameCrefs|, reserved for using at the beginning of a sentence. For languages with declensions, such as German, there is also a \lstinline|\Crefthevariantname|, whose usage is similar to the \lstinline|\crefthevariantname| introduced above.
+
+\lstinline|\Crefthe| (and the name-only relatives) can handle case changing automatically: for example, with \lstinline|\Crefthe[À]{thm1,thm2,prop3}|, you will get something like
 
 \begin{demo}
     \textbf{Aux} théorèmes 1 et 2 et \textbf{à la} proposition 3
 \end{demo}
 
-Of course you will have to define the \lstinline|\Crefthename|s separately, for example as:
+Of course, you would have to define the \lstinline|\Crefthename|s separately, for example as:
 
 \begin{code}
 \Crefthename{theorem}[Le]{théorème}[Les]{théorèmes}
 \Crefthename{proposition}[La]{proposition}[Les]{propositions}
 \end{code}
+
+\section{On the coordination of gender and number}
+
+In many languages, adjectives and verbs need to be properly inflected for the gender and singular or plural of the noun. Take French as example, you may see the following expressions:
+\begin{itemize}
+    \item La proposition précédent\textbf{e}/suivant\textbf{e}... (The previous/next proposition...)
+    \item La proposition est illustré\textbf{e} par... (The proposition is illustrated by...)
+\end{itemize}
+Thus if you later decide to change this proposition (feminine) into a theorem (masculine), you would have to modify the adjectives and verbs accordingly. Similar things happens in many other languages, and it is not quite realistic to fully automate such modifications.
+
+The name-only relatives \lstinline|\namecrefthe|, \lstinline|\nameCrefthe| etc. are designed for this purpose. They do not automatically solve these kinds of problems, but you may later search for the \meta{label} of the environment that changes, and modify the surrounding context manually --- in other words, these commands serve as recorders: if you write the word like \textquote{theorem} or \textquote{proposition} directly in the text, then later it would be unclear which part of your text needs to be update when the environment itself changes.
+
+There is another case. For example, if you wish to say \textquote{ce théorème} (\textquote{this theorem}), the pre-defined set of names that contains definite articles would be somewhat redundant. In such situation, you may use the command option \commandoption{noun} to show only the noun:
+
+\begin{code}
+\namecref[(*\commandoption{noun}*)]{(*\meta{label}*)}
+\end{code}
+
+But then of course you shall need to write the word \textquote{Ce/Cet/Cette} (these are all different forms of \textquote{This} in French) by yourself --- and if you later decide to change the type of the environment to which this \meta{label} refers, don't forget to change this word accordingly.
 
 \section{For writing multi-language documents}
 
@@ -310,7 +333,7 @@ will produce the same result as \lstinline|\cref{...}|, and \lstinline|\crefthen
 With the package option \packageoption{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| --- and similarly with \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|.
 
 
-\clearpage
+% \clearpage
 
 
 \section{Acknowledgement}
@@ -329,8 +352,8 @@ There are so many people I wish to express my gratitude to during the developmen
 \section{Known issues}
 \begin{itemize}
     \item \crefthepackage{} currently works for French, German, Italian, Portuguese (European and Brazilian) and Spanish --- certainly more languages would be added to this list in the future.
-    \item For now, you cannot specify the masculine/masculine/... of words. This means, for instance, that you cannot make the suffix adjective automatically adopted to the word when using \lstinline|\namecref| --- as an example, if you wish to say \textquote{la proposition suivante} (in French), you would have to write the feminine adjective manually. The situation should be improved with the introduction of a new key-value configuration system, which is currently on the todo-list.
-    Meanwhile, you may consider the package \textsf{zref-clever}, which has a much more powerful and sophisticated interface for configuring cross referencing.
+    % \item For now, you cannot specify the masculine/masculine/... of words. This means, for instance, that you cannot make the suffix adjective automatically adopted to the word when using \lstinline|\namecref| --- as an example, if you wish to say \textquote{la proposition suivante} (in French), you would have to write the feminine adjective manually. The situation should be improved with the introduction of a new key-value configuration system, which is currently on the todo-list.
+    % Meanwhile, you may consider the package \textsf{zref-clever}, which has a much more powerful and sophisticated interface for configuring cross referencing.
     \item The names of theorem-like environments are not provided here, you need to define them by yourself. However, users are encouraged to use the \ProjLib{} toolkit (more specifically, the internal package \textsf{create-theorem}), which already handles everything for you.
 \end{itemize}
 

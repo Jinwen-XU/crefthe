@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2023/07/22} {}
+  {2023/07/23} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -89,6 +89,8 @@
 
 \keys_define:nn { crefthe-setting }
   {
+    , noun          .code:n             = { \RenewDocumentCommand \crefthemark { m } {} }
+
     , variant       .tl_set:N           = \l__crefthe_variant_tl
 
     % , nom           .meta:n             = { variant = Nominativ }
@@ -125,6 +127,8 @@
   % #5 = label
   % #6 = original command, such as \crefthe_cref_original:w or \crefthe_Cref_original:w
   {
+    \group_begin:
+
     \tl_set:Nn \l__crefthe_variant_tl {}
     \bool_gset_false:N \g__crefthe_has_prep_bool
     \tl_set:Nn \l__crefthe_prep_tl {}
@@ -182,12 +186,12 @@
               }
           }
       }
-    \group_begin:
     \bool_if:NTF #1
       { #6 * { #5 } }
       { #6   { #5 } }
-    \group_end:
     \tl_gclear:N \l__crefthe_prep_each_tl
+
+    \group_end:
   }
 
 % \__crefthe_prep_mode: defines the default mode for supported languages
