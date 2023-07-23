@@ -133,7 +133,7 @@
 
 \section{The motivation}
 
-By default, with \textsf{cleveref}'s \lstinline|\cref| to reference theorem-like environments, the names do not contain definite articles. While this might be acceptable for English, it is certainly not good enough for languages such as French, Italian, Portuguese, Spanish, etc. --- in these cases there shall be grammatical errors and would give you a strong feeling that it is machine-generated.
+By default, with \textsf{cleveref}'s \lstinline|\cref| to reference theorem-like environments, the names do not contain definite articles. While this might be acceptable for English, it is certainly not good enough for languages such as French, German, Italian, Portuguese, Spanish, etc. --- in these cases there shall be grammatical errors and would give you a strong feeling that it is machine-generated.
 
 However, even if we manually add the definite articles to the names, there would still be other problems. As an example, if we define the French names to be:
 
@@ -276,6 +276,26 @@ You may also use the shortcuts (\texttt{nom.}, \texttt{gen.}, \texttt{dat.} and 
 
 These four are all equivalent and you may choose one to use according to your preference.
 
+Article contractions are by default enabled for German, but if you don't want this, you may use the package option \packageoption{disable german article contractions}.
+
+\section{Using abbreviation form}
+
+There is another usage of \lstinline|\crefthevariantname|: setting the abbreviation form. This allows you to use both the full form and the abbreviation form in the same document. For example, you may set
+
+\begin{code}
+\crefthevariantname{theorem}
+  {
+    {theorem}{theorems}
+    , abbr. = {th.}{ths.}
+  }
+\end{code}
+
+Then, when referencing, you can use the command option \commandoption{abbr.} to enable the abbreviation form:
+
+\begin{code}
+\crefthe[(*\commandoption{abbr.}*)]{(*\meta{label}*)}
+\end{code}
+
 \section{Regarding the upper and lower cases}
 
 As in \textsf{cleveref}, these commands have corresponding uppercased version: \lstinline|\Crefthename|,\linebreak \lstinline|\Crefthe|, \lstinline|\nameCrefthe| and \lstinline|\nameCrefsthe|, similar to \lstinline|\Crefname|, \lstinline|\Cref|, \lstinline|\nameCref|\linebreak and \lstinline|\nameCrefs|, reserved for using at the beginning of a sentence. For languages with declensions, such as German, there is also a \lstinline|\Crefthevariantname|, whose usage is similar to the \lstinline|\crefthevariantname| introduced above.
@@ -312,6 +332,7 @@ There is another case. For example, if you wish to say \textquote{ce théorème}
 
 But then of course you shall need to write the word \textquote{Ce/Cet/Cette} (these are all different forms of \textquote{This} in French) by yourself --- and if you later decide to change the type of the environment to which this \meta{label} refers, don't forget to change this word accordingly.
 
+\pagebreak
 \section{For writing multi-language documents}
 
 To place hyperlinks at the correct place, \lstinline|\crefthename| touches the corresponding format macro \lstinline|\crefformat| internally, which makes the format language-dependent. If you are writing multi-language documents, you may consider putting \lstinline|\crefthename| inside your language configuration so as to reset it each time you select a new language.
@@ -333,7 +354,7 @@ will produce the same result as \lstinline|\cref{...}|, and \lstinline|\crefthen
 With the package option \packageoption{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| --- and similarly with \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|.
 
 
-% \clearpage
+\clearpage
 
 
 \section{Acknowledgement}
