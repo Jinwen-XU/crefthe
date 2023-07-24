@@ -49,6 +49,7 @@
         crefthe,crefthename,
         Crefthe,Crefthename,
         crefthevariantname,Crefthevariantname,
+        setcrefname,setCrefname,
         namecrefthe,namecrefsthe,
         nameCrefthe,nameCrefsthe,
         crefthemark,
@@ -243,7 +244,7 @@ which would result in (provided that you have done \lstinline|\selectlanguage{fr
 
 Voilà !
 
-\section{What about German}
+\section{For language with declensions}
 
 In German, there are four declensions: nominative (\texttt{Nominativ}), genitive (\texttt{Genitiv}), dative (\texttt{Dativ}) and accusative (\texttt{Akkusativ}), making the previously presented mechanism insufficient. For such situation, we introduce the command \lstinline|\crefthevariantname| to specify the referencing name for the correspond environment. Below is an example of usage:
 
@@ -259,7 +260,10 @@ In German, there are four declensions: nominative (\texttt{Nominativ}), genitive
 \end{code}
 
 \begin{tip}
-    The first line in the configuration is the default set of names when no variant is specified. It is recommended, though not required.
+    \begin{itemize}
+        \item The first line in the configuration is the default set of names when no variant is specified. It is recommended, though not required.
+        \item There is also an equivalent but shorter name \lstinline|\setcrefname| for this command.
+    \end{itemize}
 \end{tip}
 
 After this, you may refer to a theorem via
@@ -281,25 +285,31 @@ Article contractions are by default enabled for German, but if you don't want th
 
 \section{Using abbreviation form}
 
-There is another usage of \lstinline|\crefthevariantname|: setting the abbreviation form. This allows you to use both the full form and the abbreviation form in the same document. For example, you may set
+There is another usage of \lstinline|\crefthevariantname| (or equivalently, \lstinline|\setcrefname|): setting the abbreviation form. This allows you to use both the full form and the abbreviation form within the same document. For example, you may set
 
 \begin{code}
-\crefthevariantname{theorem}
+\setcrefname{theorem}
   {
     {theorem}{theorems}
     , abbr. = {th.}{ths.}
   }
 \end{code}
 
-Then, when referencing, you can use the command option \commandoption{abbr.} to enable the abbreviation form:
+Then, when referencing, you can use the command option \commandoption{abbr.} to enable abbreviation:
 
 \begin{code}
 \crefthe[(*\commandoption{abbr.}*)]{(*\meta{label}*)}
 \end{code}
 
+\begin{tip}[Attention]
+    Please note that \commandoption{abbr.} has more priority than the option(s) for specifying declensions. This means that when \commandoption{abbr.} is enabled, the declensions are simply ignored.
+\end{tip}
+
 \section{Regarding the upper and lower cases}
 
-As in \textsf{cleveref}, these commands have corresponding uppercased version: \lstinline|\Crefthename|,\linebreak \lstinline|\Crefthe|, \lstinline|\nameCrefthe| and \lstinline|\nameCrefsthe|, similar to \lstinline|\Crefname|, \lstinline|\Cref|, \lstinline|\nameCref|\linebreak and \lstinline|\nameCrefs|, reserved for using at the beginning of a sentence. For languages with declensions, such as German, there is also a \lstinline|\Crefthevariantname|, whose usage is similar to the \lstinline|\crefthevariantname| introduced above.
+As in \textsf{cleveref}, these commands have corresponding uppercased version: \lstinline|\Crefthename|,\linebreak \lstinline|\Crefthe|, \lstinline|\nameCrefthe| and \lstinline|\nameCrefsthe|, similar to \lstinline|\Crefname|, \lstinline|\Cref|, \lstinline|\nameCref|\linebreak and \lstinline|\nameCrefs|, reserved for using at the beginning of a sentence.
+
+For languages with declensions, such as German, there is also a \lstinline|\Crefthevariantname| (or equivalently, \lstinline|\setCrefname|), corresponding to the above \lstinline|\crefthevariantname|.
 
 \lstinline|\Crefthe| (and the name-only relatives) can handle case changing automatically: for example, with \lstinline|\Crefthe[À]{thm1,thm2,prop3}|, you will get something like
 
@@ -333,7 +343,6 @@ There is another case. For example, if you wish to say \textquote{ce théorème}
 
 But then of course you shall need to write the word \textquote{Ce/Cet/Cette} (these are all different forms of \textquote{This} in French) by yourself --- and if you later decide to change the type of the environment to which this \meta{label} refers, don't forget to change this word accordingly.
 
-\pagebreak
 \section{For writing multi-language documents}
 
 To place hyperlinks at the correct place, \lstinline|\crefthename| touches the corresponding format macro \lstinline|\crefformat| internally, which makes the format language-dependent. If you are writing multi-language documents, you may consider putting \lstinline|\crefthename| inside your language configuration so as to reset it each time you select a new language.
@@ -369,8 +378,7 @@ There are so many people I wish to express my gratitude to during the developmen
 \end{itemize}
 
 
-% \clearpage
-
+\bigskip
 \section{Known issues}
 \begin{itemize}
     \item \crefthepackage{} currently works for French, German, Italian, Portuguese (European and Brazilian) and Spanish --- certainly more languages would be added to this list in the future.
