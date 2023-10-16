@@ -25,7 +25,7 @@ which is wrong, as the correct result should be:
 
 `\cref` would not be able to handle such cases correctly.
 
-## The solution
+### The solution
 
 Thus, it would be better to have a new command `\crefthe[<prep>]{<labels>}`, and to use it like
 ```latex
@@ -33,7 +33,7 @@ Thus, it would be better to have a new command `\crefthe[<prep>]{<labels>}`, and
 ```
 in order to get "*des théorèmes 1 et 2 et de la proposition 3*".
 
-# Usage
+## Usage
 
 Simply load the package with:
 ```latex
@@ -41,11 +41,12 @@ Simply load the package with:
 ```
 > "crefthe" uses "cleveref" internally, thus it should usually be placed at the last of your preamble.
 
-Before everything, you need to define the names, which can be done with `\crefthename`. Its syntax is similar to `\crefname`, but now you can specify the definite articles, for example:
+> With the package option `overwrite`, you may simply use `\cref` for `\crefthe`, and similarly for other commands.
+
+Before everything, you need to define the names, which can be done with `\crefthename`. Its syntax is similar to `\crefname`, but now you can specify the definite articles, for example (in French):
 ```latex
 \crefthename{theorem}[le]{théorème}[les]{théorèmes}
 ```
-(*In French*)
 
 Then you can use the command `\crefthe` as follows:
 - `\crefthe[<prep>]{<labels>}`
@@ -53,9 +54,11 @@ Then you can use the command `\crefthe` as follows:
 - `\crefthe-[<prep>]{<labels>}` and `\crefthe+[<prep>]{<labels>}`
    - In case the automatic version does not meet your needs, here are two manual ones. The `-` version passes the preposition `<prep>` only to the first definite article, while the `+` version passes `<prep>` to every definite article.
 
-> There is also a stared version `\crefthe*` for generating the same text but without hyperlinks.
+> - There is also a stared version `\crefthe*` for generating the same text but without hyperlinks.
+> - The name-only relatives are also available: `\namecrefthe` and `\namecrefsthe`.
+> - `\cpagerefthe` and `\Cpagerefthe` are provided as well.
 
-## Regarding German
+### Regarding language with declensions
 
 In German, there are four declensions: nominative (`Nominativ`), genitive (`Genitiv`), dative (`Dativ`) and accusative (`Akkusativ`). For such situation, we introduce the command `\crefthevariantname` to specify the referencing name for the correspond environment. Below is an example of usage:
 ```latex
@@ -87,7 +90,7 @@ These four are all equivalent and you may choose one to use according to your pr
 
 > *For more information, please refer to the documentation.*
 
-# Acknowledgement
+## Acknowledgement
 
 There are so many people I wish to express my gratitude to during the development of this package, including:
 
@@ -97,6 +100,6 @@ There are so many people I wish to express my gratitude to during the developmen
 
 - Jonathan P. Spratte, without whose help the German support would probably take much longer to complete.
 
-# License
+## License
 
 This work is released under the LaTeX Project Public License, v1.3c or later.

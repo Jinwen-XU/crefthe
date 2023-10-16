@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2023/07/23a} {}
+  {2023/10/16} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -48,6 +48,8 @@
 \NewCommandCopy \crefthe_nameCref_original:w  \nameCref
 \NewCommandCopy \crefthe_namecrefs_original:w \namecrefs
 \NewCommandCopy \crefthe_nameCrefs_original:w \nameCrefs
+\NewCommandCopy \crefthe_cpageref_original:w  \cpageref
+\NewCommandCopy \crefthe_Cpageref_original:w  \Cpageref
 
 \str_new:N \l__crefthe_tmpa_str
 
@@ -91,6 +93,16 @@
   {
     \bool_gset_true:N \g__crefthe_uppercase_bool
     \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_nameCrefs_original:w
+  }
+\NewDocumentCommand \cpagerefthe { t- t+ O{} m }
+  {
+    \bool_gset_false:N \g__crefthe_uppercase_bool
+    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_cpageref_original:w
+  }
+\NewDocumentCommand \Cpagerefthe { t- t+ O{} m }
+  {
+    \bool_gset_true:N \g__crefthe_uppercase_bool
+    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_Cpageref_original:w
   }
 
 \keys_define:nn { crefthe-command }
@@ -476,10 +488,16 @@
   {
     \bool_if:NT \l__crefthe_overwrite_bool
       {
-        \RenewCommandCopy \cref     \crefthe
-        \RenewCommandCopy \Cref     \Crefthe
-        \RenewCommandCopy \crefname \crefthename
-        \RenewCommandCopy \Crefname \Crefthename
+        \RenewCommandCopy \cref      \crefthe
+        \RenewCommandCopy \Cref      \Crefthe
+        \RenewCommandCopy \namecref  \namecrefthe
+        \RenewCommandCopy \nameCref  \nameCrefthe
+        \RenewCommandCopy \namecrefs \namecrefsthe
+        \RenewCommandCopy \nameCrefs \nameCrefsthe
+        \RenewCommandCopy \cpageref  \cpagerefthe
+        \RenewCommandCopy \Cpageref  \Cpagerefthe
+        \RenewCommandCopy \crefname  \crefthename
+        \RenewCommandCopy \Crefname  \Crefthename
       }
   }
 

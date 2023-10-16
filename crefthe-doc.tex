@@ -45,6 +45,7 @@
         Cref,Crefname,
         namecref,namecrefs,
         nameCref,nameCrefs,
+        cpageref,Cpageref,
         crefformat,
         crefthe,crefthename,
         Crefthe,Crefthename,
@@ -52,6 +53,7 @@
         setcrefname,setCrefname,
         namecrefthe,namecrefsthe,
         nameCrefthe,nameCrefsthe,
+        cpagerefthe,Cpagerefthe,
         crefthemark,
         crefthepatchname,
         selectlanguage,
@@ -118,13 +120,13 @@
 
 \begin{document}
 
-\def\PackageVersion{2023/07/23}
-\def\PackageSubVersion{a}
+\def\PackageVersion{2023/10/16}
+\def\PackageSubVersion{}
 
 \title{\crefthepackage{}\\\smallskip\itshape Cross referencing with proper definite articles}
 \author{Jinwen XU}
 \thanks{Corresponding to: \texttt{\crefthepackage{} \PackageVersion\PackageSubVersion}}
-\date{\TheDate{\PackageVersion}[only-year-month], in Beijing}
+\date{\TheDate{\PackageVersion}[only-year-month], in Paris}
 
 \maketitle
 
@@ -210,6 +212,7 @@ Then you can use the command \lstinline|\crefthe| as follows:
     \begin{itemize}
         \item There is also a stared version \lstinline|\crefthe*| for generating the same referencing text without creating hyperlinks.
         \item The name-only relatives are also available: \lstinline|\namecrefthe| and \lstinline|\namecrefsthe|.
+        \item \lstinline|\cpagerefthe| and \lstinline|\Cpagerefthe| are provided as well.
     \end{itemize}
 \end{tip}
 
@@ -307,7 +310,7 @@ Then, when referencing, you can use the command option \commandoption{abbr.} to 
 
 \section{Regarding the upper and lower cases}
 
-As in \textsf{cleveref}, these commands have corresponding uppercased version: \lstinline|\Crefthename|,\linebreak \lstinline|\Crefthe|, \lstinline|\nameCrefthe| and \lstinline|\nameCrefsthe|, similar to \lstinline|\Crefname|, \lstinline|\Cref|, \lstinline|\nameCref|\linebreak and \lstinline|\nameCrefs|, reserved for using at the beginning of a sentence.
+As in \textsf{cleveref}, these commands have corresponding uppercased version: \lstinline|\Crefthename|,\linebreak \lstinline|\Crefthe|, \lstinline|\nameCrefthe|, \lstinline|\nameCrefsthe| and \lstinline|\Cpagerefthe|, similar to \lstinline|\Crefname|,\linebreak \lstinline|\Cref|, \lstinline|\nameCref|, \lstinline|\nameCrefs| and \lstinline|\Cpageref|, reserved for using at the beginning of a sentence. Their usage is essentially the same as the corresponding lowercase version.
 
 For languages with declensions, such as German, there is also a \lstinline|\Crefthevariantname| (or equivalently, \lstinline|\setCrefname|), corresponding to the above \lstinline|\crefthevariantname|.
 
@@ -324,6 +327,7 @@ Of course, you would have to define the \lstinline|\Crefthename|s separately, fo
 \Crefthename{proposition}[La]{proposition}[Les]{propositions}
 \end{code}
 
+\enlargethispage*{\baselineskip}
 \section{On the coordination of gender and number}
 
 In many languages, adjectives and verbs need to be properly inflected for the gender and singular or plural of the noun. Take French as example, you may see the following expressions:
@@ -361,7 +365,7 @@ For those preset names defined with \lstinline|\crefname|\,/\,\lstinline|\Crefna
 \crefthepackage{} loads \textsf{cleveref} automatically and passes related options to it. All its commands, used without optional arguments, degenerate to those in \textsf{cleveref}. For example, \lstinline|\crefthe{...}|%
 will produce the same result as \lstinline|\cref{...}|, and \lstinline|\crefthename| shall behave the same as \lstinline|\crefname| if the definite articles are not specified. That said, you may safely use the command \lstinline|\crefthe| everywhere in your document without causing extra trouble.
 
-With the package option \packageoption{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| --- and similarly with \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|.
+With the package option \packageoption{overwrite}, user commands in \textsf{cleveref} will be replaced by those offered here, thus you can simply write \lstinline|\cref| for \lstinline|\crefthe| --- and similarly with \lstinline|\Cref|, \lstinline|\crefname| and \lstinline|\Crefname|, etc.
 
 
 \clearpage
