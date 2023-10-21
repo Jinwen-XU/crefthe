@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2023/10/16} {}
+  {2023/10/21} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -429,7 +429,7 @@
     \tl_gclear:N \l__crefthe_prep_once_tl
     \tl_gset:Nx \l__crefthe_prep_each_tl
       { \text_lowercase:n { \l__crefthe_prep_each_tl } }
-    \str_if_eq:eeF { \str_tail:n { #1 } } { ' } { ~ }
+    \str_if_eq:eeF { \exp_args:Ne \str_item:nn { #1 } { -1 } } { ' } { ~ }
     \bool_gset_false:N \g__crefthe_uppercase_bool
   }
 
