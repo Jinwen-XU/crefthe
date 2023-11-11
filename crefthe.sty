@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2023/10/21} {}
+  {2023/11/11} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -39,6 +39,7 @@
 
 \RequirePackage { cleveref }
 \RequirePackage { regexpatch }
+\@namedef{ver@xpatch.sty}{}
 
 \NewCommandCopy \crefthe_cref_original:w      \cref
 \NewCommandCopy \crefthe_Cref_original:w      \Cref
