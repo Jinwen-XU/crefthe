@@ -1,5 +1,5 @@
 %%
-%% Copyright (C) 2021-2023 by Jinwen XU
+%% Copyright (C) 2021-2024 by Jinwen XU
 %% ------------------------------------
 %%
 %% This file may be distributed and/or modified under the conditions of
@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2023/11/11} {}
+  {2024/02/24} {}
   {Cross referencing with proper definite articles}
 
 \keys_define:nn { crefthe }
@@ -67,43 +67,43 @@
 \NewDocumentCommand \crefthe { s t- t+ O{} m }
   {
     \bool_gset_false:N \g__crefthe_uppercase_bool
-    \__crefthe_cref_general:NNNnnN #1 #2 #3 { #4 } { #5 } \crefthe_cref_original:w
+    \__crefthe_cref_general:NNNxxN #1 #2 #3 { #4 } { #5 } \crefthe_cref_original:w
   }
 \NewDocumentCommand \Crefthe { s t- t+ O{} m }
   {
     \bool_gset_true:N \g__crefthe_uppercase_bool
-    \__crefthe_cref_general:NNNnnN #1 #2 #3 { #4 } { #5 } \crefthe_Cref_original:w
+    \__crefthe_cref_general:NNNxxN #1 #2 #3 { #4 } { #5 } \crefthe_Cref_original:w
   }
 
 \NewDocumentCommand \namecrefthe { t- t+ O{} m }
   {
     \bool_gset_false:N \g__crefthe_uppercase_bool
-    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_namecref_original:w
+    \__crefthe_cref_general:NNNxxN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_namecref_original:w
   }
 \NewDocumentCommand \nameCrefthe { t- t+ O{} m }
   {
     \bool_gset_true:N \g__crefthe_uppercase_bool
-    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_nameCref_original:w
+    \__crefthe_cref_general:NNNxxN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_nameCref_original:w
   }
 \NewDocumentCommand \namecrefsthe { t- t+ O{} m }
   {
     \bool_gset_false:N \g__crefthe_uppercase_bool
-    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_namecrefs_original:w
+    \__crefthe_cref_general:NNNxxN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_namecrefs_original:w
   }
 \NewDocumentCommand \nameCrefsthe { t- t+ O{} m }
   {
     \bool_gset_true:N \g__crefthe_uppercase_bool
-    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_nameCrefs_original:w
+    \__crefthe_cref_general:NNNxxN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_nameCrefs_original:w
   }
 \NewDocumentCommand \cpagerefthe { t- t+ O{} m }
   {
     \bool_gset_false:N \g__crefthe_uppercase_bool
-    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_cpageref_original:w
+    \__crefthe_cref_general:NNNxxN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_cpageref_original:w
   }
 \NewDocumentCommand \Cpagerefthe { t- t+ O{} m }
   {
     \bool_gset_true:N \g__crefthe_uppercase_bool
-    \__crefthe_cref_general:NNNnnN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_Cpageref_original:w
+    \__crefthe_cref_general:NNNxxN \c_false_bool #1 #2 { #3 } { #4 } \crefthe_Cpageref_original:w
   }
 
 \keys_define:nn { crefthe-command }
@@ -200,6 +200,7 @@
 
     \group_end:
   }
+\cs_generate_variant:Nn \__crefthe_cref_general:NNNnnN { NNNxx }
 
 % \__crefthe_prep_mode: defines the default mode for supported languages
 \cs_new:Nn \__crefthe_prep_mode:
