@@ -5,6 +5,8 @@
 
 \usepackage{ProjLib}
 
+\setmonofont[Scale=.9]{Iosevka}
+
 %%================================
 %% For typesetting code
 %%================================
@@ -26,7 +28,7 @@
     breaklines = true,
     frame = lines,
     backgroundcolor = \color{code-background},
-    flexiblecolumns = true,
+    basewidth = .5em,
     escapeinside = {(*}{*)},
     alsoletter = {_,:},
     % numbers = left,
@@ -69,8 +71,8 @@
 \lstnewenvironment{code}{\setstretch{1.05}\LocallyStopLineNumbers}{\ResumeLineNumbers\vspace{-.3\baselineskip}\vspace{-.5\parskip}}
 \lstnewenvironment{code*}{\setstretch{1.05}\lstset{numbers=left}\LocallyStopLineNumbers}{\ResumeLineNumbers\vspace{-.3\baselineskip}\vspace{-.5\parskip}}
 
-\newcommand{\packageoption}[1]{\texttt{\textcolor{code-option}{#1}}}
-\newcommand{\commandoption}[1]{\texttt{\textcolor{code-keys}{#1}}}
+\newcommand{\packageoption}[1]{\textcolor{code-option}{\texttt{#1}}}
+\newcommand{\commandoption}[1]{\textcolor{code-keys}{\texttt{#1}}}
 
 %%================================
 %% tip
@@ -125,7 +127,7 @@
 
 \title{\crefthepackage{}\\\smallskip\itshape Cross referencing with proper definite articles and declensions}
 \author{Jinwen XU}
-\thanks{Corresponding to: \texttt{\crefthepackage{} \PackageVersion\PackageSubVersion}}
+\thanks{Corresponding to: \texttt{\crefthepackage{} \PackageVersion\PackageSubVersion}.}
 \date{\TheDate{\PackageVersion}[only-year-month], in Paris}
 
 \maketitle
@@ -224,6 +226,7 @@ Then you can use the command \lstinline|\crefthe| as follows:
 % \end{code}
 
 
+\enlargethispage*{\baselineskip}
 \section{Example}
 
 Let us come back to the example at the beginning, now you can do this:
@@ -310,7 +313,7 @@ Then, when referencing, you can use the command option \commandoption{abbr.} to 
 
 \section{Regarding the upper and lower cases}
 
-As in \textsf{cleveref}, these commands have corresponding uppercased version: \lstinline|\Crefthename|,\linebreak \lstinline|\Crefthe|, \lstinline|\nameCrefthe|, \lstinline|\nameCrefsthe| and \lstinline|\Cpagerefthe|, similar to \lstinline|\Crefname|,\linebreak \lstinline|\Cref|, \lstinline|\nameCref|, \lstinline|\nameCrefs| and \lstinline|\Cpageref|, reserved for using at the beginning of a sentence. Their usage is essentially the same as the corresponding lowercase version.
+As with \textsf{cleveref}, these commands have corresponding uppercased version: \lstinline|\Crefthename|, \lstinline|\Crefthe|, \lstinline|\nameCrefthe|, \lstinline|\nameCrefsthe| and \lstinline|\Cpagerefthe|, similar to \lstinline|\Crefname|, \lstinline|\Cref|, \lstinline|\nameCref|, \lstinline|\nameCrefs| and \lstinline|\Cpageref|, reserved for using at the beginning of a sentence. Their usage is essentially the same as the corresponding lowercase version.
 
 For languages with declensions, such as German, there is also a \lstinline|\Crefthevariantname| (or equivalently, \lstinline|\setCrefname|), corresponding to the above \lstinline|\crefthevariantname|.
 

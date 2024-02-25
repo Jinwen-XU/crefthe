@@ -162,15 +162,39 @@
 \keys_define:nn { crefthe-command }
   {
     , noun          .code:n             = { \RenewDocumentCommand \crefthemark { m } {} }
+    , only-noun     .meta:n             = { noun }
+    , only~noun     .meta:n             = { noun }
+    , only noun     .meta:n             = { noun }
+    , no-prep       .meta:n             = { noun }
+    , no~prep       .meta:n             = { noun }
+    , no prep       .meta:n             = { noun }
+    , hide-prep     .meta:n             = { noun }
+    , hide~prep     .meta:n             = { noun }
+    , hide prep     .meta:n             = { noun }
+    , no-preposition       .meta:n      = { noun }
+    , no~preposition       .meta:n      = { noun }
+    , no preposition       .meta:n      = { noun }
+    , hide-preposition     .meta:n      = { noun }
+    , hide~preposition     .meta:n      = { noun }
+    , hide preposition     .meta:n      = { noun }
 
     , variant       .tl_set:N           = \l__crefthe_variant_tl
+    , declension    .tl_set:N           = \l__crefthe_variant_tl
+    , D             .tl_set:N           = \l__crefthe_variant_tl
 
     , abbr          .bool_set:N         = \l__crefthe_abbr_bool
     , abbr.         .bool_set:N         = \l__crefthe_abbr_bool
+    , abbreviation  .bool_set:N         = \l__crefthe_abbr_bool
 
     , unknown       .code:n             = {}
   }
-\clist_const:Nn \c__crefthe_command_known_keys_clist { noun, abbr, abbr. }
+\clist_const:Nn \c__crefthe_command_known_keys_clist
+  {
+    noun, only-noun, only~noun, only noun,
+    no-prep, no~prep, no prep, no-preposition, no~preposition, no preposition,
+    hide-prep, hide~prep, hide prep, hide-preposition, hide~preposition, hide preposition,
+    abbr, abbr., abbreviation,
+  }
 
 \cs_new:Nn \__crefthe_command_key_parser:n
   {
