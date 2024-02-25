@@ -12,7 +12,7 @@
 \NeedsTeXFormat{LaTeX2e}[2022-06-01]
 \ProvidesExplPackage
   {crefthe}
-  {2024/02/24} {}
+  {2024/02/25} {}
   {Cross referencing with proper definite articles and declensions}
 
 \keys_define:nn { crefthe }
@@ -40,6 +40,59 @@
 \RequirePackage { cleveref }
 \RequirePackage { regexpatch }
 \@namedef{ver@xpatch.sty}{}
+
+% Fix for cleveref in order to work with long range of pages
+% See https://tex.stackexchange.com/a/620066
+\providecommand*{\@setcpagerefrange}[3]{%
+    \@@setcpagerefrange{#1}{#2}{cref}{#3}}
+\providecommand*{\@setCpagerefrange}[3]{%
+    \@@setcpagerefrange{#1}{#2}{Cref}{#3}}
+\providecommand*{\@setlabelcpagerefrange}[3]{%
+    \@@setcpagerefrange{#1}{#2}{labelcref}{#3}}
+
+% Fix for cleveref in order to work with xr-hyper
+% See https://tex.stackexchange.com/a/708445
+\def\cref@getref#1#2{%
+  \expandafter\let\expandafter#2\csname r@#1@cref\endcsname%
+  \expandafter\expandafter\expandafter\def%
+    \expandafter\expandafter\expandafter#2%
+    \expandafter\expandafter\expandafter{%
+      \expandafter\@firstoffive#2}}% <-------- five
+\def\cpageref@getref#1#2{%
+  \expandafter\let\expandafter#2\csname r@#1@cref\endcsname%
+  \expandafter\expandafter\expandafter\def%
+    \expandafter\expandafter\expandafter#2%
+    \expandafter\expandafter\expandafter{%
+      \expandafter\@secondoffive#2}}% <----------- five
+\AtBeginDocument{%
+  \def\label@noarg#1{%
+    \cref@old@label{#1}%
+    \@bsphack%
+    \edef\@tempa{{page}{\the\c@page}}%
+    \setcounter{page}{1}%
+    \edef\@tempb{\thepage}%
+    \expandafter\setcounter\@tempa%
+    \cref@constructprefix{page}{\cref@result}%
+    \protected@write\@auxout{}%
+      {\string\newlabel{#1@cref}{{\cref@currentlabel}%
+      {[\@tempb][\arabic{page}][\cref@result]\thepage}{}{}{}}}% <----- five
+    \@esphack}%
+  \def\label@optarg[#1]#2{%
+    \cref@old@label{#2}%
+    \@bsphack%
+    \edef\@tempa{{page}{\the\c@page}}%
+    \setcounter{page}{1}%
+    \edef\@tempb{\thepage}%
+    \expandafter\setcounter\@tempa%
+    \cref@constructprefix{page}{\cref@result}%
+    \protected@edef\cref@currentlabel{%
+      \expandafter\cref@override@label@type%
+        \cref@currentlabel\@nil{#1}}%
+    \protected@write\@auxout{}%
+      {\string\newlabel{#2@cref}{{\cref@currentlabel}%
+      {[\@tempb][\arabic{page}][\cref@result]\thepage}{}{}{}}}% <------- five
+    \@esphack}%
+}
 
 \NewCommandCopy \crefthe_cref_original:w      \cref
 \NewCommandCopy \crefthe_Cref_original:w      \Cref
