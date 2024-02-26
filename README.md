@@ -4,6 +4,8 @@
 
 "crefthe" is a LaTeX package aimed at helping `\cref` to handle the definite articles and declensions properly (especially for the phenomenon of article contractions in many European languages, such as French and German).
 
+> Package dependencies: [`cleveref`](https://ctan.org/pkg/cleveref), [`regexpatch`](https://ctan.org/pkg/regexpatch).
+
 ## Motivation
 
 By default, when using cleveref's `\cref` to reference theorem-like environments, the names do not contain definite articles. This may be acceptable for English, but certainly not good enough for languages such as French, Italian, Portuguese, Spanish, etc. — in these cases there shall be grammatical errors and would give you a strong feeling that it is machine-generated.
